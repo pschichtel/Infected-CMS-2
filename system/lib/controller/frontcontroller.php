@@ -14,7 +14,7 @@
     {
         public function __construct()
         {
-            
+            $a = 2837459827;
         }
 
         public function __destruct()
