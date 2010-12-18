@@ -5,14 +5,15 @@
     require_once dirname(__FILE__) . '/query.php';
     require_once dirname(__FILE__) . '/result.php';
 
-    class mysql implements IDatabaseAdapter
+    class mysqlAdapter implements IDatabaseAdapter
     {
         private $host;
         private $user;
         private $pass;
         private $dbname;
-        private $dbhandle;
+        private $charset;
 
+        private $dbhandle;
         private $conntected;
 
 
@@ -32,6 +33,11 @@
                 return false;
             }
         }
+
+        public function QueryBuilder()
+        {
+            return new mysqlQuery();
+        }
         
         public function __construct($data)
         {
@@ -39,6 +45,8 @@
             $this->user = $data['user'];
             $this->pass = (isset($data['pass']) ? $data['pass'] : '');
             $this->dbname = substr($data['path'], 1);
+            $this->charset = (isset($data['fragment']) ? $data['fragment'] : null);
+
 
             $this->dbhandle = null;
             $this->connected = false;
@@ -62,7 +70,11 @@
                 {
                     throw new DatabaseException('Database selection failed!', 502);
                 }
-                $this->conntected = true;
+                $this->connected = true;
+                if (!is_null($this->charset))
+                {
+                    $this->query($this->QueryBuilder()->custom('SET CHARACTER SET \'' . $this->charset . '\'')->expectsResult(false));
+                }
             }
         }
 
@@ -85,11 +97,18 @@
         {
             $this->connect();
             $result = mysql_query($query->getQuery(), $this->dbhandle);
-            if (!is_resource($result))
+            if (!is_resource($result) && $query->expectsResult())
             {
                 throw new DatabaseException('query failed!', 503);
             }
-            return new mysqlResult($result);
+            elseif (!$query->expectsResult())
+            {
+                return;
+            }
+            else
+            {
+                return new mysqlResult($result);
+            }
         }
 
         public function unbufferedQuery(IDatabaseQuery $query)

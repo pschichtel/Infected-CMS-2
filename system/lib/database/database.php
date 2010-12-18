@@ -3,23 +3,23 @@
     /**
      * Dependencies
      */
-    require_once ICMS_CORE_PATH . 'lib/database/databaseexception.php';
-    require_once ICMS_CORE_PATH . 'lib/database/idatabaseadapter.php';
-    require_once ICMS_CORE_PATH . 'lib/database/idatabaseresult.php';
-    require_once ICMS_CORE_PATH . 'lib/database/idatabasequery.php';
+    require_once ICMS_SYS_PATH . 'lib/database/databaseexception.php';
+    require_once ICMS_SYS_PATH . 'lib/database/idatabaseadapter.php';
+    require_once ICMS_SYS_PATH . 'lib/database/idatabaseresult.php';
+    require_once ICMS_SYS_PATH . 'lib/database/idatabasequery.php';
 
     /**
      * 
      */
     abstract class Database
     {
-        private static $instances = array();
+        private static $adapterInstances = array();
         
         public static function &factory($pattern)
         {
-            if (isset(self::$instances[$pattern]))
+            if (isset(self::$adapterInstances[$pattern]))
             {
-                return self::$instances[$pattern];
+                return self::$adapterInstances[$pattern];
             }
             $parsed_pattern = @parse_url($pattern);
             if ($parsed_pattern ===  false)
@@ -41,7 +41,13 @@
             }
 
             require_once $adapter_path;
-            
+            $adapter .= 'Adapter';
+
+            if (!class_exists($adapter))
+            {
+                throw new DatabaseException('the given database adapter is invalid', 403);
+            }
+
             if (in_array('IDatabaseAdapter', class_implements($adapter)) !== true)
             {
                 throw new DatabaseException('the given database adapter is invalid', 403);
@@ -52,9 +58,9 @@
                 throw new DatabaseException('the pattern validation failed for the fiven adapter!', 405);
             }
             $instance = new $adapter($parsed_pattern);
-            self::$instances[$pattern] = $instance;
+            self::$adapterInstances[$pattern] = $instance;
             
-            return self::$instances[$pattern];
+            return self::$adapterInstances[$pattern];
         }
     }
 ?>

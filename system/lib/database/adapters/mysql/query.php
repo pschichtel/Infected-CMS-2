@@ -5,15 +5,18 @@
     class mysqlQuery implements IDatabaseQuery
     {
         private $query;
+        private $expectsResult;
 
         public function __construct()
         {
             $this->query = '';
+            $this->expectsResult = false;
         }
 
         public function insert_into($table, $fields, $data)
         {
             $this->query = 'INSERT INTO `' . $table . '` (`' . implode('`,`', $fields) . '`) VALUES (' . implode(',', $data) . ') ';
+            $this->expectsResult = false;
             return $this;
         }
 
@@ -28,12 +31,14 @@
                 $fields = '`' . implode('`,`', $fields) . '`';
             }
             $this->query = 'SELECT ' . $fields . 'FROM `' . $table . '` ';
+            $this->expectsResult = true;
             return $this;
         }
 
         public function delete_from($table)
         {
             $this->query = 'DELETE FROM `' . $table . '` ';
+            $this->expectsResult = false;
             return $this;
         }
 
@@ -47,6 +52,7 @@
             }
             $setter[0] = ' ';
             $this->query = 'UPDATE `' . $table . '` SET' . $setter . ' ';
+            $this->expectsResult = false;
             return $this;
         }
 
@@ -71,6 +77,21 @@
         public function getQuery()
         {
             return trim($this->query);
+        }
+
+        public function expectsResult($expects = null)
+        {
+            if ($expects === null)
+            {
+                return $this->expectsResult;
+            }
+            else
+            {
+                $this->expectsResult = (bool)$expects;
+                return $this;
+                
+            }
+
         }
     }
 ?>

@@ -3,7 +3,7 @@
     /**
      * Dependencies
      */
-    Application::import('text::text');
+    require_once ICMS_SYS_PATH . 'text/text.php';
     
     /**
      *

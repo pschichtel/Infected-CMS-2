@@ -1,9 +1,31 @@
-<pre><?php
+<?php
+    header('Content-type: text/html;charset=UTF-8');
+?><pre><?php
     error_reporting(-1);
     ini_set('display_errors', 1);
     chdir(dirname(__FILE__));
 
     require_once 'system/init.php';
+    EventManager::registerEvent(new Event('onBeforeAppExec'));
+    EventManager::registerEvent(new Event('onAfterAppExec'));
+    //require_once 'system/init.php';
+    Registry::set('designpath', ICMS_SYS_PATH . 'designs/');
+    Registry::set('logpath', ICMS_SYS_PATH . 'logs/frontend/');
+    Registry::set('languagepath', ICMS_SYS_PATH . 'language/frontend/');
+    Registry::set('controllerpath', ICMS_SYS_PATH . 'controller/frontend/');
+    Registry::set('templatepath', ICMS_SYS_PATH . 'templates/frontend/');
+    
+
+
+    $frontcontroller = new Frontcontroller();
+    try
+    {
+        $frontcontroller->run();
+    }
+    catch (Exception $e)
+    {
+        echo $e->getMessage();
+    }
 
     /*
     Application::import('text::bbcode');

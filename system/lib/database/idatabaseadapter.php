@@ -5,6 +5,7 @@
     interface IDatabaseAdapter
     {
         public static function validate($data);
+        public function QueryBuilder();
 
         public function __construct($data);
         public function __destruct();

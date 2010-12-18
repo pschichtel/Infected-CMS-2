@@ -15,5 +15,6 @@
         public function custom($command);
 
         public function getQuery();
+        public function expectsResult($expects = null);
     }
 ?>
