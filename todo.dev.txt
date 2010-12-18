@@ -1,0 +1,61 @@
+                        ToDo :: Infected Framework - IFw
+                                                                                
+Add: \database
+    - generischer Querybuilder
+    - abstrakte Datenbankverbindung
+
+Add: \configuration
+    - INI-Datei Interface für parsistente Configurationen
+
+Add: \image
+    - Klasse zur Grafikmanipulation
+    - flexibles CAPTCHA
+
+Change: \network::http
+    - Funktionalität wiederherstellen
+
+Change: \network::smtp
+    - Konfiguration verschieben
+
+Change: \text::text
+    - neuer Name
+    - Refactoring
+
+Change: \view::design
+    - zu IFw-Paket portieren
+    - flexibler gestalten
+
+Change: \view::template
+    - zu IFw-Paket portieren
+    - flexibler gestalten
+
+Add: \view::pagebrowser
+    - Klasse zum Erstellen von Page-Navigationen
+
+Change: \tools::debug
+    - überarbeiten
+
+Change: \tools::log
+    - überarbeiten
+
+Add: \data::categories
+    - Klasse zum Verwalten von Kategorien
+
+Add: \data::contents
+    - Klasse zum Verwalten von mehrsprachigen Inhalten
+
+Change: \data::comments
+    - an IFw anpassen
+    - Performance-Verbesserungen
+
+Change: \data::lang
+    - an IFw anpassen
+
+Change: \data::request
+    - alte Info-Klasse umschreiben
+        => Klasse zum Auflösen des Requests
+
+Change: \frontcontroller::frontcontroller
+    - FrontController-Klasse zum Verarbeiten des Requests (\data::request)
+
+

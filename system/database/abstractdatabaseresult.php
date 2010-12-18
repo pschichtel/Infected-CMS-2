@@ -1,0 +1,11 @@
+<?php
+
+    /**
+     *
+     */
+    abstract class AbstractDatabaseResult
+    {
+        
+    }
+
+?>
