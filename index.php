@@ -3,7 +3,9 @@
     ini_set('display_errors', 1);
     chdir(dirname(__FILE__));
 
-    require_once '../framework/application.php';
+    require_once 'system/init.php';
+
+    /*
     Application::import('text::bbcode');
 
     class myApplication implements IApplication
@@ -183,7 +185,7 @@ text;
 
     echo "\n\n\n";
 
-
+*/
     
 ?>
 </pre>
