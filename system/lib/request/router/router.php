@@ -3,7 +3,7 @@
     /**
      * Dependencies
      */
-    Application::import('request::router::routeconfig');
+    require_once dirname(__FILE__) . '/routeconfig.php';
 
     /**
      *

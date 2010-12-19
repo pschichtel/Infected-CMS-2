@@ -1,17 +1,10 @@
 <?php
-
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'request/router.php';
-
     /**
      *
      */
-    class Request
+    class Response
     {
-        private static $instance = null;
-
+        private static $instance;
 
         private function __construct()
         {}
@@ -19,7 +12,7 @@
         public function __destruct()
         {}
 
-        private function __clone()
+        private function  __clone()
         {}
 
         public static function &getInstance()
@@ -31,5 +24,4 @@
             return self::$instance;
         }
     }
-    
 ?>

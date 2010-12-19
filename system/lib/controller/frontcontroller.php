@@ -1,10 +1,17 @@
 <?php
+
+    /**
+     * Events
+     */
+    EventManager::registerEvent(new Event('onBeforeControllerExec'));
+    EventManager::registerEvent(new Event('onAfterControllerExec'));
     /**
      * Dependencies
      */
     require_once ICMS_SYS_PATH . 'lib/database/database.php';
     require_once ICMS_SYS_PATH . 'lib/configuration/config.php';
     require_once ICMS_SYS_PATH . 'lib/text/crypter/aescrypter.php';
+    require_once ICMS_SYS_PATH . 'lib/controller/abstractcontroller.php';
     //require_once ICMS_SYS_PATH . 'lib/';
 
     /**
@@ -12,27 +19,95 @@
      */
     final class Frontcontroller
     {
-        public function __construct()
+        private static $instance = null;
+
+        public $controllerPath;
+        
+        private function __construct()
         {
-            $a = 2837459827;
+            $this->controllerPath = '';
         }
 
         public function __destruct()
+        {}
+
+        private function  __clone()
+        {}
+
+        public static function &getInstance()
         {
-            
+            if (self::$instance === null)
+            {
+                self::$instance = new self();
+            }
+            return self::$instance;
         }
 
-        public function run()
+        public function setControllerPath($path)
         {
-            var_dump(Registry::getAll());
-            $crypter = new AESCrypter('supersicher', 2);
-            echo "\n\n\n";
-            $data = 'test ';
-            $encrypted = $crypter->encrypt($data);
-            $decrypted = $crypter->decrypt($encrypted);
-            echo "raw:       '$data'\n";
-            echo "encrypted: '$encrypted'\n";
-            echo "decrypted: '$decrypted'\n";
+            if (!preg_match('/(\/|\\\)$/', $path))
+            {
+                $path .= '/';
+            }
+            $this->controllerPath = $path;
+        }
+
+        public function getControllerPath()
+        {
+            return $this->controllerPath;
+        }
+
+        public function run(Request $request, Response $response)
+        {
+            $controller = $request->getController();
+            $action = 'action_' . $request->getAction();
+
+            $controllerPath = $this->controllerPath . $controller . '/controller.php';
+            $controller = $controller . 'Controller';
+
+            if (file_exists($controllerPath))
+            {
+                require_once $controllerPath;
+                if (class_exists($controller))
+                {
+                    $controller = new $controller($request, $response);
+                    if ($controller instanceof  AbstractController)
+                    {
+                        try
+                        {
+                            if (is_callable(array($controller, $action)))
+                            {
+                                $controller->$action();
+                            }
+                            else
+                            {
+                                $controller->action_index();
+                            }
+                        }
+                        catch (ControllerException $e)
+                        {
+                            echo $e->getMessage();
+                        }
+                        catch (Exception $e)
+                        {
+                            throw new Exception($e->getMessage(), $e->getCode());
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("invalid controller!\ncontrollers have to extend AbstractController");
+                    }
+                }
+                else
+                {
+                    throw new Exception("controller class not found!\n$controller");
+                }
+                
+            }
+            else
+            {
+                throw new Exception("controller file not found!\n$controllerPath");
+            }
         }
     }
 ?>
