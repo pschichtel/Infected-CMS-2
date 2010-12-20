@@ -133,31 +133,52 @@
         }
 
         /**
-         * fills $number with leading zeros until $length is reached
+         * fills $string with leading and following characters until $length is reached
          *
          * @access public
          * @static
-         * @param string $number the number to fill up
+         * @param string $string the string to fill up
+         * @param char $char the character to fill with
          * @param int $length the length to fill up to
          * @return string the zerofilled number as a string
          */
-        public static function zerofill($number, $length = null)
+        public static function fill($string, $char, $length)
         {
-            if (is_null($length))
-            {
-                $length = mb_strlen(PHP_INT_MAX);
-            }
-            $cLen = mb_strlen($number);
-            $dif = $length - $cLen;
-            $zeros = '';
-            for ($i = 0; $i < $dif; $i++)
-            {
-                $zeros .= '0';
-            }
-            return $zeros . $number;
+            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            return str_pad($string, $length, $char[0], STR_PAD_BOTH);
         }
 
+        /**
+         * fills $string with leading characters until $length is reached
+         *
+         * @access public
+         * @static
+         * @param string $string the string to fill up
+         * @param char $char the character to fill with
+         * @param int $length the length to fill up to
+         * @return string the zerofilled number as a string
+         */
+        public static function lfill($string, $char, $length)
+        {
+            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            return str_pad($string, $length, $char[0], STR_PAD_LEFT);
+        }
 
+        /**
+         * fills $string with following characters until $length is reached
+         *
+         * @access public
+         * @static
+         * @param string $string the string to fill up
+         * @param char $char the character to fill with
+         * @param int $length the length to fill up to
+         * @return string the zerofilled number as a string
+         */
+        public static function rfill($string, $char, $length)
+        {
+            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            return str_pad($string, $length, $char[0], STR_PAD_RIGHT);
+        }
 
         /**
          * checks whether the given string is a valid email address

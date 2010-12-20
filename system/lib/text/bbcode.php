@@ -3,10 +3,10 @@
     /**
      * Dependencies
      */
-    Application::import('text::text');
-    Application::import('text::stringparser::stringparser_bbcode');
-    Application::import('text::geshi::geshi');
-    Application::import('view::template');
+    require_once dirname(__FILE__) . '/text.php';
+    require_once dirname(__FILE__) . '/stringparser/stringparser.php';
+    require_once dirname(__FILE__) . '/geshi/geshi.php';
+    //require_once dirname(__FILE__) . '';
     
     /**
      *
@@ -196,7 +196,7 @@
             $parser->setCodeFlag('list', 'opentag.before.newline', BBCODE_NEWLINE_DROP);
             $parser->setCodeFlag('list', 'closetag.before.newline', BBCODE_NEWLINE_DROP);
 
-            foreach ($result as $code)
+            foreach ($this->bbcodes as $code)
             {
                 if ($code['strippable'] === '0')
                 {
