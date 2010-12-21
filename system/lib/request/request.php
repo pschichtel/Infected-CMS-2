@@ -17,10 +17,23 @@
         private $POST;
         private $COOKIE;
         private $FILES;
+        private $modRewrite;
+        private $requestUri;
 
 
         private function __construct()
-        {}
+        {
+            $this->GET = $_GET;
+            $_GET = null;
+            $this->POST = $_POST;
+            $_POST = null;
+            $this->COOKIE = $_COOKIE;
+            $_COOKIE = null;
+            $this->FILES = $_FILES;
+            $_FILES = null;
+            
+            $this->modRewrite = isset($_SERVER['REDIRECT_URL']);
+        }
 
         public function __destruct()
         {}
@@ -97,6 +110,16 @@
         public function issetFILES($name)
         {
             return isset($this->FILES[$name]);
+        }
+
+        public function getRequestUri()
+        {
+            return $this->requestUri;
+        }
+
+        public function getModRewrite()
+        {
+            return $this->modRewrite;
         }
     }
     

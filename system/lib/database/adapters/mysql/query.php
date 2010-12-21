@@ -5,16 +5,24 @@
     class mysqlQuery implements IDatabaseQuery
     {
         private $query;
+        private $dbhandle;
         private $expectsResult;
 
-        public function __construct()
+        public function __construct(&$dbhandle)
         {
             $this->query = '';
             $this->expectsResult = false;
+            $this->dbhandle = &$dbhandle;
+        }
+
+        public function escape($string)
+        {
+            return mysql_real_escape_string($string, $this->dbhandle);
         }
 
         public function insert_into($table, $fields, $data)
         {
+            $data = array_map(array($this, 'escape'), $data);
             $this->query = 'INSERT INTO `' . $table . '` (`' . implode('`,`', $fields) . '`) VALUES (' . implode(',', $data) . ') ';
             $this->expectsResult = false;
             return $this;
@@ -45,6 +53,7 @@
         public function update($table, $fields, $data)
         {
             $limit = min(count($fields), count($data));
+            $data = array_map(array($this, 'escape'), $data);
             $setter = '';
             for ($i = 0; $i < $limit; $i++)
             {

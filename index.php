@@ -8,6 +8,7 @@
     require_once 'system/init.php';
 
     require_once ICMS_SYS_PATH . 'lib/tools/debug.php';
+    require_once ICMS_SYS_PATH . 'lib/request/router/router.php';
 
     Registry::set('designpath', ICMS_SYS_PATH . 'designs/');
     Registry::set('logpath', ICMS_SYS_PATH . 'logs/frontend/');
@@ -16,18 +17,21 @@
     
 
 
-    $frontcontroller = Frontcontroller::getInstance();
+    $router = new Router(Request::getInstance());
+    $frontcontroller = new Frontcontroller($router);
     $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'controller/frontend/');
     try
     {
         $time = Debug::benchmark(array($frontcontroller, 'run'), array(Request::getInstance(), Response::getInstance()), $result);
 
-        echo "\n\nRuntime: $time seconds\n";
+        echo "\n\nRuntime: $time seconds\n\n\n\n";
     }
     catch (Exception $e)
     {
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage();
     }
+
+        phpinfo();
     
 ?>
 </pre>

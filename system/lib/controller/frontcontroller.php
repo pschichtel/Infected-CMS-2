@@ -19,20 +19,22 @@
      */
     final class Frontcontroller
     {
-        private static $instance = null;
+        //private static $instance = null;
 
         public $controllerPath;
+        private $router;
         
-        private function __construct()
+        public function __construct(Router $router)
         {
             $this->controllerPath = '';
+            $this->router = $router;
         }
 
         public function __destruct()
         {}
 
-        private function  __clone()
-        {}
+        //private function  __clone()
+        //{}
 
         public static function &getInstance()
         {

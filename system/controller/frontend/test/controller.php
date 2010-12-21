@@ -1,7 +1,14 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    class TestController extends AbstractController
+    {
+        public function __construct(Request $request, Response $response)
+        {
+            
+        }
 
+        public function action_index()
+        {
+            echo 'Ich bin die Indexaktion :) !';
+        }
+    }
 ?>

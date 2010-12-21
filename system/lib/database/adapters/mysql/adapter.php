@@ -36,7 +36,8 @@
 
         public function QueryBuilder()
         {
-            return new mysqlQuery();
+            $this->connect();
+            return new mysqlQuery($this->dbhandle);
         }
         
         public function __construct($data)
