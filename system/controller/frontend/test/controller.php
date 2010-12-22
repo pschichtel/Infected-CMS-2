@@ -10,5 +10,10 @@
         {
             echo 'Ich bin die Indexaktion :) !';
         }
+
+        public function action_test()
+        {
+            echo 'ich bin die Testaktion :D !';
+        }
     }
 ?>
