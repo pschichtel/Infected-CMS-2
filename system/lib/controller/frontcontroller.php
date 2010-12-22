@@ -22,12 +22,10 @@
         //private static $instance = null;
 
         public $controllerPath;
-        private $router;
         
-        public function __construct(Router $router)
+        public function __construct()
         {
             $this->controllerPath = '';
-            $this->router = $router;
         }
 
         public function __destruct()
@@ -59,7 +57,7 @@
             return $this->controllerPath;
         }
 
-        public function run(Request $request, Response $response)
+        public function run(IRequest $request, Response $response)
         {
             $controller = $request->getController();
             $action = 'action_' . $request->getAction();

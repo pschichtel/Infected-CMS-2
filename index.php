@@ -8,7 +8,7 @@
     require_once 'system/init.php';
 
     require_once ICMS_SYS_PATH . 'lib/tools/debug.php';
-    require_once ICMS_SYS_PATH . 'lib/request/router/router.php';
+    require_once ICMS_SYS_PATH . 'lib/request/router/modrewriterouter.php';
 
     Registry::set('designpath', ICMS_SYS_PATH . 'designs/');
     Registry::set('logpath', ICMS_SYS_PATH . 'logs/frontend/');
@@ -16,13 +16,15 @@
     Registry::set('templatepath', ICMS_SYS_PATH . 'templates/frontend/');
     
 
-
-    $router = new Router(Request::getInstance());
-    $frontcontroller = new Frontcontroller($router);
-    $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'controller/frontend/');
     try
     {
-        $time = Debug::benchmark(array($frontcontroller, 'run'), array(Request::getInstance(), Response::getInstance()), $result);
+        $frontcontroller = new Frontcontroller();
+        $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'controller/frontend/');
+        $request = Request::getInstance();
+        $response = Response::getInstance();
+        $request->route(new ModRewriteRouter());
+        
+        $time = Debug::benchmark(array($frontcontroller, 'run'), array($request, $response), $result);
 
         echo "\n\nRuntime: $time seconds\n\n\n\n";
     }
@@ -30,8 +32,6 @@
     {
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage();
     }
-
-        phpinfo();
     
 ?>
 </pre>

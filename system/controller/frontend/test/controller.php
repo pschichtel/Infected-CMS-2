@@ -1,7 +1,7 @@
 <?php
     class TestController extends AbstractController
     {
-        public function __construct(Request $request, Response $response)
+        public function __construct(IRequest $request, Response $response)
         {
             
         }

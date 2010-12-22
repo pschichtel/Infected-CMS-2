@@ -3,12 +3,15 @@
     /**
      * Dependencies
      */
-    require_once ICMS_SYS_PATH . 'lib/request/router/router.php';
+    require_once dirname(__FILE__) . '/router/irouter.php';
+    require_once dirname(__FILE__) . '/router/defaultrouter.php';
+    require_once dirname(__FILE__) . '/irequest.php';
+    require_once dirname(__FILE__) . '/requestexception.php';
 
     /**
      *
      */
-    class Request
+    class Request implements IRequest
     {
         private static $instance = null;
         private $controller;
@@ -120,6 +123,22 @@
         public function getModRewrite()
         {
             return $this->modRewrite;
+        }
+
+        public function route(IRouter $router = null)
+        {
+            if (!$router instanceof IRouter)
+            {
+                $router = new DefaultRouter();
+            }
+            if (!$router->resolveRoute($this))
+            {
+                throw new RequestException('Request::route: resolving the route failed!', 503);
+            }
+
+            $this->controller = $router->getController();
+            $this->action = $router->getAction();
+            $this->GET = array_merge($this->GET, $router->getParams());
         }
     }
     

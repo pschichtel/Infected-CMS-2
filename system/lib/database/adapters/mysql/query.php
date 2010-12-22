@@ -102,5 +102,11 @@
             }
 
         }
+
+        public function clear()
+        {
+            $this->query = '';
+            return $this;
+        }
     }
 ?>

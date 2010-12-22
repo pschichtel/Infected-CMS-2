@@ -1,43 +1,37 @@
 <?php
-    class Router
+    /**
+     * 
+     */
+    class ModRewriteRouter implements IRouter
     {
         protected $request;
         protected $controller;
         protected $action;
         protected $params;
-        protected $filename;
 
-        public function __construct(Request& $request)
-        {
-            $this->request =& $request;
-
-            if ($this->request->getModRewrite())
-            {
-                $this->parseModRewrite($this->request->getRequestUri());
-            }
-            else
-            {
-                $this->parse($this->request->getRequestUri());
-            }
-        }
-
-        //public function parse()
-        public function parseModRewrite($query)
+        public function __construct()
         {
             $this->controller = '';
             $this->action = '';
             $this->params = array();
-            
-            echo "Query: $query\n";
+        }
 
-
-
+        /**
+         * routes the given path/query to an controller and hist action
+         *
+         * @access public
+         * @param string $query the query to route
+         * @return bool false on failure
+         */
+        public function resolveRoute(IRequest $request)
+        {
+            if (!$request->issetGET('query'))
+            {
+                return false;
+            }
+            $query = $request->getGET('query');
             $lastSlash = strrpos($query, '/');
             $filename = substr($query, $lastSlash + 1);
-            if (preg_match('/\./', $filename))
-            {
-                $this->filename = $filename;
-            }
 
 
             $parts = explode('/', $query);
@@ -55,11 +49,6 @@
                     $this->filename = $parts[$count];
                     unset($parts[$count]);
                 }
-            }
-
-            if ($count < 2)
-            {
-                return false;
             }
 
             $this->controller = $parts[0];
@@ -83,26 +72,14 @@
             return $this->action;
         }
 
-        public function getParam($name)
-        {
-            if (isset($this->params[$name]))
-            {
-                return $this->params[$name];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public function getParams()
         {
             return $this->params;
         }
 
-        public function getFilename()
+        public function addStaticRoute(StaticRoute $route)
         {
-            return $this->filename;
+
         }
     }
 ?>

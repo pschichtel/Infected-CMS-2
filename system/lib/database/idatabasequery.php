@@ -13,6 +13,7 @@
         public function orderBy($field, $asc = true);
 
         public function custom($command);
+        public function clear();
 
         public function getQuery();
         public function expectsResult($expects = null);

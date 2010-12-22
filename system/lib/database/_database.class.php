@@ -2,7 +2,7 @@
     /**
      * 
      */
-    class _Database implements IDatabase
+    class _Database
     {
         /**
          * the database handle
