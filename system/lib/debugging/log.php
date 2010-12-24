@@ -5,6 +5,23 @@
     class Log
     {
         /**
+         * the loglevel which controls the logger
+         *
+         * @static
+         * @access public
+         * @var int
+         */
+        public static $loglevel = 5;
+
+        /**
+         *
+         * @static
+         * @access private
+         * @var Log
+         */
+        private static $instances = array();
+
+        /**
          * the file handle of the log
          *
          * @access protected
@@ -45,27 +62,17 @@
         protected $sthWritten;
 
         /**
-         * defines whether to print a backtrace
-         *
-         * @access protected
-         * @var bool true for backtracing
-         */
-        protected $backtrace;
-
-        /**
          * initiates the Log object
          *
          * @access public
          * @param string $logname the filename for the log
          */
-        public function __construct($logname, $backtrace = false)
+        private function __construct($logfile)
         {
             $this->sthWritten = false;
-            $this->backtrace = $backtrace;
-            $this->logname = $logname;
-            $this->filepath = CI_APP_PATH . 'logs' . DIRECTORY_SEPARATOR . $logname . '.log';
+            $this->filepath = $logfile;
             $this->fmode = 'a';
-            if (!file_exists($this->filepath) || filesize($this->filepath) > CoreConfig::LOG_LIMIT)
+            if (!file_exists($this->filepath))
             {
                 $this->fmode = 'w';
             }
@@ -80,8 +87,38 @@
         {
             if ($this->sthWritten)
             {
-                $this->write(0, 'info', '----------| Log closed |----------');
+                $this->write(0, 'Logger', '----------| Log closed |----------');
                 @fclose($this->fhandle);
+            }
+        }
+
+        private function __clone()
+        {}
+
+        public static function factory($logfile)
+        {
+            if (!is_writeable(dirname($logfile)))
+            {
+                throw new Exception('the logfile is not writable!', 401);
+            }
+            if (!isset(self::$instances[$logfile]))
+            {
+                self::$instances[$logfile] = new self($logfile);
+            }
+            return self::$instances[$logfile];
+        }
+
+        protected function open()
+        {
+            if (!$this->sthWritten)
+            {
+                $this->sthWritten = true;
+                $this->fhandle = @fopen($this->filepath, $this->fmode);
+                if ($this->fhandle === false)
+                {
+                    throw new Exception('Could not open logfile "' . $this->logfile . '" for writing! Check file permissions!');
+                }
+                $this->write(0, 'Logger', '----------> Log opened <----------');
             }
         }
 
@@ -93,32 +130,15 @@
          * @param string $entryType the type of the log entry
          * @param string $message the message/text of the entry
          */
-        public function write($debugLevel, $entryType, $message)
+        public function write($logLevel, $entryType, $message)
         {
-            if (CoreConfig::DEBUG >= $debugLevel)
+            if (self::$loglevel >= $logLevel)
             {
-                if (!$this->sthWritten)
-                {
-                    $this->sthWritten = true;
-                    $this->fhandle = @fopen($this->filepath, $this->fmode);
-                    if ($this->fhandle === false)
-                    {
-                        throw new IOException('Could not open logfile "' . $this->logname . '.log.txt" for writing! Check file permissions!');
-                    }
-                    $this->write(0, 'info', '----------> Log opened <----------');
-                }
-                $timestamp = date('d.m. H:i:s');
+                $this->open();
+                $timestamp = date('d.m.y H:i:s');
                 $message = str_replace("\n", ' ', $message);
                 $message = str_replace("\r", ' ', $message);
                 @fwrite($this->fhandle, "[$timestamp][$entryType] $message\n");
-                if ($this->backtrace)
-                {
-                    ob_start();
-                    debug_print_backtrace();
-                    $trace = ob_get_clean();
-
-                    @fwrite($this->fhandle, $trace . "\n=================\n\n");
-                }
             }
         }
     }

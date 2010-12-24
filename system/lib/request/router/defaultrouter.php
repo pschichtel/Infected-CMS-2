@@ -17,13 +17,13 @@
 
         public function resolveRoute(IRequest $request)
         {
-            if ($request->issetGET('site'))
+            if ($request->exists('get', 'site'))
             {
-                $this->controller = $request->getGET('site');
+                $this->controller = $request->get('get', 'site');
             }
-            if ($request->issetGET('do'))
+            if ($request->exists('get', 'do'))
             {
-                $this->action = $request->getGET('do');
+                $this->action = $request->get('get', 'do');
             }
             return true;
         }

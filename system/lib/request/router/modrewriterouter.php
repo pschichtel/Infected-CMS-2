@@ -25,11 +25,11 @@
          */
         public function resolveRoute(IRequest $request)
         {
-            if (!$request->issetGET('query'))
+            if (!$request->exists('get', 'query'))
             {
                 return false;
             }
-            $query = $request->getGET('query');
+            $query = $request->get('get', 'query');
             $lastSlash = strrpos($query, '/');
             $filename = substr($query, $lastSlash + 1);
 
@@ -41,20 +41,11 @@
                 $this->controller = $parts[0];
                 return true;
             }
-            if ($count % 2 != 0)
-            {
-                if (preg_match('/\./', $parts[$count - 1]))
-                {
-                    $count--;
-                    $this->filename = $parts[$count];
-                    unset($parts[$count]);
-                }
-            }
 
             $this->controller = $parts[0];
             $this->action = $parts[1];
 
-            for ($i = 2; $i < $count; $i += 2)
+            for ($i = 2; $i + 1 < $count; $i += 2)
             {
                 $this->params[$parts[$i]] = $parts[$i + 1];
             }

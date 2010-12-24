@@ -16,25 +16,20 @@
         private static $instance = null;
         private $controller;
         private $action;
-        private $GET;
-        private $POST;
-        private $COOKIE;
-        private $FILES;
         private $modRewrite;
         private $requestUri;
+        private $requestVars;
 
 
         private function __construct()
         {
-            $this->GET = $_GET;
-            $_GET = null;
-            $this->POST = $_POST;
-            $_POST = null;
-            $this->COOKIE = $_COOKIE;
-            $_COOKIE = null;
-            $this->FILES = $_FILES;
-            $_FILES = null;
-            
+            $this->requestVars = array();
+            $this->requestVars['get'] = $_GET;
+            $this->requestVars['post'] = $_POST;
+            $this->requestVars['cookie'] = $_COOKIE;
+            $this->requestVars['files'] = $_FILES;
+
+            $this->requestUri = $_SERVER['REQUEST_URI'];
             $this->modRewrite = isset($_SERVER['REDIRECT_URL']);
         }
 
@@ -63,57 +58,37 @@
             return $this->action;
         }
 
-        public function getGET($name)
+        public function get($type, $name)
         {
-            if (isset($this->GET[$name]))
+            $type = mb_strtolower($type);
+            if ($this->exists($type, $name))
             {
-                return $this->GET[$name];
+                return $this->requestVars[$type][$name];
+            }
+            else
+            {
+                return null;
             }
         }
 
-        public function issetGET($name)
+        public function getAll($type)
         {
-            return isset($this->GET[$name]);
-        }
-
-        public function getPOST($name)
-        {
-            if (isset($this->POST[$name]))
+            if (isset($this->requestVars[$type]))
             {
-                return $this->POST[$name];
+                return $this->requestVars[$type];
             }
-        }
-
-        public function issetPOST($name)
-        {
-            return isset($this->POST[$name]);
-        }
-
-        public function getCOOKIE($name)
-        {
-            if (isset($this->COOKIE[$name]))
+            else
             {
-                return $this->COOKIE[$name];
+                return null;
             }
+
         }
 
-        public function issetCOOKIE($name)
+        public function exists($type, $name)
         {
-            return isset($this->COOKIE[$name]);
+            return isset($this->requestVars[$type][$name]);
         }
 
-        public function getFILES($name)
-        {
-            if (isset($this->FILES[$name]))
-            {
-                return $this->FILES[$name];
-            }
-        }
-
-        public function issetFILES($name)
-        {
-            return isset($this->FILES[$name]);
-        }
 
         public function getRequestUri()
         {
@@ -138,7 +113,7 @@
 
             $this->controller = $router->getController();
             $this->action = $router->getAction();
-            $this->GET = array_merge($this->GET, $router->getParams());
+            $this->requestVars['get'] = array_merge($this->requestVars['get'], $router->getParams());
         }
     }
     
