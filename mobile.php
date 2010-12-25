@@ -18,11 +18,13 @@
     function dither()
     {
         $image = new ImageManipulate('test.jpg');
-        $image->dither(array('255,0,0', '0,255,0', '0,0,255'));
+        //$image->dither(array('255,0,0', '0,255,0', '0,0,255'));
+        $image->dither(array('255,255,255', '0,0,0'));
         header('Content-type: ' . $image->getMime());
         echo $image->render();
     }
 
     $time = Debug::benchmark('dither');
+    $logger->write(0, 'runtime', $time . '');
     
 ?>

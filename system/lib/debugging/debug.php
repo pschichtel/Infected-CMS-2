@@ -232,10 +232,10 @@
         {
             if (is_callable($callback))
             {
-                $start = strtok(microtime(), ' ') + strtok(' ');
+                $start = microtime(true);
                 $result = call_user_func_array($callback, $params);
-                $end = strtok(microtime(), ' ') + strtok(' ');
-                return number_format($end - $start, 6);
+                $end = microtime(true);
+                return ($end - $start);
             }
             else
             {

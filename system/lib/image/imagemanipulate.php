@@ -138,15 +138,19 @@
                     {
                         $counter++;
                         $currentColorAverage = ($currentColor + $colors[$z]) / 2;
+                        $logger->write(0, 'values', "currentColorAverage=$currentColorAverage, currentColor=$currentColor, pixelColor=$pixelColor");
                         if ($pixelColor > $currentColor && $pixelColor < $currentColorAverage)
                         {
                             imagesetpixel($this->image, $x, $y, $colors[$z]);
+                            $logger->write(0, 'choise', "Farbe ändern: {$colors[$z]}");
                             break;
                         }
                         else
                         {
-                            $currentColor = $colors[$z];
+                            $currentColor =& $colors[$z];
+                            $logger->write(0, 'choise', "Farbe beibehalten: $currentColor");
                         }
+                        $logger->write(0, 'Z-loop', '-----------------------------------------');
                     }
                     /*/ prüfen, ob Pixel auf weiß oder schwarz gesetzt wird
                     if($prevVal < ($black + $white / 2))
@@ -180,7 +184,9 @@
                     {
                         imagesetpixel($this->image, $x - 1, $y + 1, imagecolorat($this->image, $x - 1, $y + 1) + (3 * $error / 16));
                     }
+                    $logger->write(0, 'X-loop', '-----------------------------------------');
                 }
+                $logger->write(0, 'Y-loop', '-----------------------------------------');
             }
 
             $logger->write(0, 'counts', 'Schleifendurchläufe: ' . $counter);
