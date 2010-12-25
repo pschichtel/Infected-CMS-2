@@ -108,8 +108,6 @@
 
             sort($colors, SORT_NUMERIC);
             $colorcount = count($colors);
-            $allcolors = 0;
-            $coloraverage = 0;
 
             $logger->write(0, 'counts', 'ColorCount: ' . $colorcount);
 
@@ -121,12 +119,10 @@
                     throw new ImageException('there was a wrong color given', 401);
                 }
                 $colors[$i] = imagecolorallocate($this->image, intval($parts[0]), intval($parts[1]), intval($parts[2]));
-                $allcolors += $colors[$i];
             }
-            $coloraverage = $allcolors / $colorcount;
 
             $counter = 0;
-            $black = imagecolorallocate($this->image, 0, 0, 0);
+            $black = imagecolorallocate($this->image, 255, 255, 255);
             for ($y = 0; $y < $this->imageHeight; $y++)
             {
                 for ($x = 0; $x < $this->imageWidth; $x++)
