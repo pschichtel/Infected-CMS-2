@@ -134,18 +134,19 @@
                     {
                         $counter++;
                         $currentColorAverage = ($currentColor + $colors[$z]) / 2;
-                        $logger->write(0, 'values', "currentColorAverage=$currentColorAverage, currentColor=$currentColor, pixelColor=$pixelColor");
-                        if ($pixelColor > $currentColor && $pixelColor < $currentColorAverage)
+                        //$logger->write(0, 'values', "currentColorAverage=$currentColorAverage, currentColor=$currentColor, pixelColor=$pixelColor");
+                        //if ($pixelColor > $currentColor && $pixelColor < $currentColorAverage)
+                        if ($pixelColor < $currentColorAverage)
                         {
                             imagesetpixel($this->image, $x, $y, $colors[$z]);
                             $logger->write(0, 'choise', "Farbe ändern: {$colors[$z]}");
                             break;
                         }
-                        else
+                        /*else
                         {
                             $currentColor =& $colors[$z];
                             $logger->write(0, 'choise', "Farbe beibehalten: $currentColor");
-                        }
+                        }*/
                         $logger->write(0, 'Z-loop', '-----------------------------------------');
                     }
                     /*/ prüfen, ob Pixel auf weiß oder schwarz gesetzt wird

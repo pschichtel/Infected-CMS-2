@@ -97,7 +97,7 @@
 
         public static function factory($logfile)
         {
-            if (!is_writeable(dirname($logfile)))
+            if (!is_writable(dirname($logfile)))
             {
                 throw new Exception('the logfile is not writable!', 401);
             }
