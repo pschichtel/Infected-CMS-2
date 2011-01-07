@@ -3,10 +3,6 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/router/irouter.php';
-    require_once dirname(__FILE__) . '/router/defaultrouter.php';
-    require_once dirname(__FILE__) . '/irequest.php';
-    require_once dirname(__FILE__) . '/requestexception.php';
 
     /**
      *

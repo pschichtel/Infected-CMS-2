@@ -1,5 +1,9 @@
 <?php
-
+    /**
+     * Dependencies
+     */
+    require_once dirname(__FILE__) . '/imagemanipulate.php';
+    
     /**
      *
      */

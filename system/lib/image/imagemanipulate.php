@@ -1,4 +1,7 @@
 <?php
+    /**
+     * Dependencies
+     */
     require_once dirname(__FILE__) . '/imageexception.php';
     
     /**
@@ -79,7 +82,12 @@
          */
         public function rescale($width, $height)
         {
-            
+            $image = imagecreatetruecolor($width, $height);
+            imagecopyresampled($image, $this->image, 0, 0, 0, 0, $width, $height, $this->imageWidth, $this->imageHeight);
+            imagedestroy($this->image);
+            $this->image = $image;
+            $this->imageWidth = $width;
+            $this->imageHeight = $height;
         }
 
         /**
@@ -89,7 +97,13 @@
          */
         public function rescaleByWidth($width, $keepratio = true)
         {
-
+            $ratio = 1;
+            if ($keepratio)
+            {
+                $ratio = $width / $this->imageWidth;
+            }
+            $height = round($this->imageHeight * $ratio);
+            $this->rescale($width, $height);
         }
 
         /**
@@ -99,11 +113,19 @@
          */
         public function rescaleByHeight($height, $keepratio = true)
         {
-
+            $ratio = 1;
+            if ($keepratio)
+            {
+                $ratio = $height / $this->imageHeight;
+            }
+            $width = round($this->imageWidth * $ratio);
+            $this->rescale($width, $height);
         }
 
         public function dither($colors)
         {
+            //imagetruecolortopalette($this->image, true, 16);
+            //return;
             $logger = Log::factory(DITHER_LOG);
 
             sort($colors, SORT_NUMERIC);

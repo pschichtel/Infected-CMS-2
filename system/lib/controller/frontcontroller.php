@@ -8,11 +8,7 @@
     /**
      * Dependencies
      */
-    require_once ICMS_SYS_PATH . 'lib/database/database.php';
-    require_once ICMS_SYS_PATH . 'lib/configuration/config.php';
-    require_once ICMS_SYS_PATH . 'lib/text/crypter/aescrypter.php';
     require_once ICMS_SYS_PATH . 'lib/controller/abstractcontroller.php';
-    //require_once ICMS_SYS_PATH . 'lib/';
 
     /**
      *

@@ -1,5 +1,5 @@
 <?php
-    header('Content-type: text/html;charset=UTF-8');
+    //header('Content-type: text/html;charset=UTF-8');
 ?><pre><?php
     error_reporting(-1);
     ini_set('display_errors', 1);
@@ -7,22 +7,22 @@
 
     require_once 'system/init.php';
 
-    require_once ICMS_SYS_PATH . 'lib/tools/debug.php';
-    require_once ICMS_SYS_PATH . 'lib/request/router/modrewriterouter.php';
+    require_once ICMS_SYS_PATH . 'lib/debugging/debug.php';
 
-    Registry::set('designpath', ICMS_SYS_PATH . 'designs/');
-    Registry::set('logpath', ICMS_SYS_PATH . 'logs/frontend/');
-    Registry::set('languagepath', ICMS_SYS_PATH . 'language/frontend/');
-    Registry::set('templatepath', ICMS_SYS_PATH . 'templates/frontend/');
+    Registry::set('designpath',     ICMS_SYS_PATH . 'designs/');
+    Registry::set('logpath',        ICMS_SYS_PATH . 'logs/frontend/');
+    Registry::set('languagepath',   ICMS_SYS_PATH . 'language/frontend/');
+    Registry::set('templatepath',   ICMS_SYS_PATH . 'templates/frontend/');
+    Registry::set('database',       Database::factory('mysql://root@localhost/test#utf8'));
     
 
     try
     {
         $frontcontroller = new Frontcontroller();
-        $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'controller/frontend/');
+        $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'pages/frontend/');
         $request = Request::getInstance();
         $response = Response::getInstance();
-        $request->route(new ModRewriteRouter());
+        $request->route(new DefaultRouter());
         
         $time = Debug::benchmark(array($frontcontroller, 'run'), array($request, $response), $result);
 
@@ -30,7 +30,7 @@
     }
     catch (Exception $e)
     {
-        echo "EXCEPTION !!!!\nMessage: " . $e->getMessage();
+        echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
     
 ?>

@@ -15,9 +15,10 @@
     function dither()
     {
         $image = new ImageManipulate('frau.png');
-        //$image->dither(array('255,0,0', '0,255,0', '0,0,255'));
+        //$image->dither(array('255,255,255', '204,204,204', '153,153,153', '0,0,0', '255,0,0', '255,0,0', '255,255,0', '153,153,0', '0,255,0', '0,153,0', '0,255,255', '0,153,153', '0,0,255', '0,0,153', '255,0,255', '153,0,153'));
         //$image->dither(array('255,255,255', '0,0,0'));
-        $image->dither(array('255,0,0', '0,255,0'));
+        $image->dither(array('255,0,0', '0,0,255'));
+        $image->rescaleByHeight(300);
         header('Content-type: ' . $image->getMime());
         echo $image->render();
     }

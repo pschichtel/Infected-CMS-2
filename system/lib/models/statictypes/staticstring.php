@@ -2,7 +2,7 @@
     /**
      * Dependencies
      */
-    Application::import('data::statictypes::abstractstatictype');
+    require_once dirname(__FILE__) . '/abstractstatictype.php';
 
     class StaticString extends AbstractStaticType
     {
