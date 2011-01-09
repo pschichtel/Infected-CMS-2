@@ -2,7 +2,7 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/abstractstatictype.php';
+    require_once ICMS_SYS_PATH . 'lib/models/statictypes/abstractstatictype.php';
 
     class StaticInteger extends AbstractStaticType
     {

@@ -3,11 +3,11 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/event.php';
-    require_once dirname(__FILE__) . '/eventargs.php';
-    require_once dirname(__FILE__) . '/ieventhandler.php';
-    require_once dirname(__FILE__) . '/eventhandler.php';
-    require_once dirname(__FILE__) . '/eventhandlerchain.php';
+    require_once ICMS_SYS_PATH . 'lib/events/event.php';
+    require_once ICMS_SYS_PATH . 'lib/events/eventargs.php';
+    require_once ICMS_SYS_PATH . 'lib/events/ieventhandler.php';
+    require_once ICMS_SYS_PATH . 'lib/events/eventhandler.php';
+    require_once ICMS_SYS_PATH . 'lib/events/eventhandlerchain.php';
     
     /**
      * 

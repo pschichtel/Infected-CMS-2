@@ -2,7 +2,7 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/imageexception.php';
+    require_once ICMS_SYS_PATH . 'lib/image/imageexception.php';
     
     /**
      *

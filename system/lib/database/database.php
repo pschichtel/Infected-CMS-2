@@ -22,6 +22,7 @@
                 return self::$adapterInstances[$pattern];
             }
             $parsed_pattern = @parse_url($pattern);
+
             if ($parsed_pattern ===  false)
             {
                 throw new DatabaseException('database connection pattern is invalid!', 401);
@@ -61,6 +62,58 @@
             self::$adapterInstances[$pattern] = $instance;
             
             return self::$adapterInstances[$pattern];
+        }
+
+        public static function factorFromConfig(IConfigFile $config)
+        {
+            $scheme = false;
+            $user = false;
+            $pass = false;
+            $host = false;
+
+            $uri = '';
+            if ($config->exists('adapter'))
+            {
+                $uri .= $config->get('adapter') . '://';
+                $scheme = true;
+            }
+            if ($config->exists('user'))
+            {
+                $uri .= $config->get('user');
+                $user = true;
+            }
+            if ($config->exists('pass'))
+            {
+                $pass = $config->get('pass');
+                if ($pass !== '')
+                {
+                    $uri .= ($user ? ':' : '') . $pass;
+                    $pass = true;
+                }
+            }
+            if ($config->exists('host'))
+            {
+                if ($user || $pass)
+                {
+                    $uri .= '@';
+                }
+                $uri .= $config->get('host');
+                $host = true;
+            }
+            if ($config->exists('database'))
+            {
+                $uri .= ($host ? '/' : '') . $config->get('database');
+            }
+            if ($config->exists('prefix'))
+            {
+                $uri .= '?' . $config->get('prefix');
+            }
+            if ($config->exists('charset'))
+            {
+                $uri .= '#' . $config->get('charset');
+            }
+            
+            return self::factory($uri);
         }
     }
 ?>

@@ -13,7 +13,24 @@
     Registry::set('logpath',        ICMS_SYS_PATH . 'logs/frontend/');
     Registry::set('languagepath',   ICMS_SYS_PATH . 'language/frontend/');
     Registry::set('templatepath',   ICMS_SYS_PATH . 'templates/frontend/');
-    Registry::set('database',       Database::factory('mysql://root@localhost/test#utf8'));
+
+    //$config = new EncryptedConfigFile(ICMS_SYS_PATH . 'configs/database.encrypted.conf', 'supersicher');
+    //$config = new INIConfigFile(ICMS_SYS_PATH . configs/database.conf');
+    $config = new ConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
+    Registry::set('database',       Database::factorFromConfig($config));
+    //Registry::set('database',       Database::factory('mysql://root@localhost/test?ci-0001_#utf8'));
+
+    /*$config->setConfig(array(
+        'adapter' => 'mysql',
+        'user' => 'root',
+        'pass' => '',
+        'host' => 'localhost',
+        'database' => 'test',
+        'prefix' => 'ci-0001_',
+        'charset' => 'utf8'
+    ));
+    $config->save();*/
+    var_dump($config->getAll());
     
 
     try

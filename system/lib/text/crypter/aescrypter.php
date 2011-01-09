@@ -2,7 +2,7 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/icrypter.php';
+    require_once ICMS_SYS_PATH . 'lib/text/crypter/icrypter.php';
     
     /**
      *

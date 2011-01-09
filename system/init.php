@@ -14,5 +14,8 @@
     require_once ICMS_SYS_PATH . 'lib/models/config.php';
     require_once ICMS_SYS_PATH . 'lib/database/database.php';
     require_once ICMS_SYS_PATH . 'lib/controller/frontcontroller.php';
+    require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/configfile.php';
+    require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/iniconfigfile.php';
+    require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/encryptedconfigfile.php';
 
 ?>

@@ -2,7 +2,7 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/imagemanipulate.php';
+    require_once ICMS_SYS_PATH . 'lib/image/imagemanipulate.php';
     
     /**
      *

@@ -3,10 +3,10 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/text.php';
-    require_once dirname(__FILE__) . '/stringparser/stringparser.php';
-    require_once dirname(__FILE__) . '/geshi/geshi.php';
-    //require_once dirname(__FILE__) . '';
+    require_once ICMS_SYS_PATH . 'lib/text/text.php';
+    require_once ICMS_SYS_PATH . 'lib/text/stringparser/stringparser.php';
+    require_once ICMS_SYS_PATH . 'lib/text/geshi/geshi.php';
+    //require_once ICMS_SYS_PATH . 'lib/text';
     
     /**
      *
