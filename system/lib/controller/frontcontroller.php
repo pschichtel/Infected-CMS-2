@@ -59,7 +59,7 @@
             $action = 'action_' . $request->getAction();
 
             $controllerPath = $this->controllerPath . $controller . '/controller.php';
-            $controller = $controller . 'Controller';
+            $controller = ucfirst(strtolower($controller)) . 'Controller';
 
             if (file_exists($controllerPath))
             {

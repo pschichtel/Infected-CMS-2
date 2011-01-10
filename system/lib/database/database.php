@@ -31,7 +31,7 @@
             {
                 throw new DatabaseException('no database adapter given!', 402);
             }
-            $adapter =& $parsed_pattern['scheme'];
+            $adapter = ucfirst(strtolower($parsed_pattern['scheme']));
             $adapter_path = dirname(__FILE__) . DIRECTORY_SEPARATOR .
                             'adapters' . DIRECTORY_SEPARATOR .
                             $adapter . DIRECTORY_SEPARATOR .

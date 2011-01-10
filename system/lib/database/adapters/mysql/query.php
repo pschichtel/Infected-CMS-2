@@ -2,7 +2,7 @@
     /**
      *
      */
-    class mysqlQuery implements IDatabaseQuery
+    class MysqlQuery implements IDatabaseQuery
     {
         private $query;
         private $dbhandle;

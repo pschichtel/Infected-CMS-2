@@ -5,7 +5,7 @@
     require_once dirname(__FILE__) . '/query.php';
     require_once dirname(__FILE__) . '/result.php';
 
-    class mysqlAdapter implements IDatabaseAdapter
+    class MysqlAdapter implements IDatabaseAdapter
     {
         private $host;
         private $user;
@@ -14,7 +14,7 @@
         private $charset;
 
         private $dbhandle;
-        private $conntected;
+        private $connected;
 
 
         public static function validate($data)
@@ -74,7 +74,7 @@
                 $this->connected = true;
                 if (!is_null($this->charset))
                 {
-                    $this->query($this->QueryBuilder()->custom('SET CHARACTER SET \'' . $this->charset . '\'')->expectsResult(false));
+                    mysql_set_charset($this->charset, $this->dbhandle);
                 }
             }
         }

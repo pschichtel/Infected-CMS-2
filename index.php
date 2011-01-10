@@ -1,24 +1,31 @@
 <?php
-    //header('Content-type: text/html;charset=UTF-8');
-?><pre><?php
+    define('ENCODING', 'UTF8');
+    header('Content-type: text/html;charset=' . ENCODING);
+    mb_internal_encoding(ENCODING);
+
+
+    //$string = 'äöüÄÖÜß';
+    //echo "String: '$string'\nLength: " . mb_strlen($string);
     error_reporting(-1);
-    ini_set('display_errors', 1);
-    chdir(dirname(__FILE__));
+    ini_set('display_errors', true);
+    define('ICMS_APP_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+    chdir(ICMS_APP_PATH);
 
-    require_once 'system/init.php';
-
+    require_once ICMS_APP_PATH . 'system/init.php';
     require_once ICMS_SYS_PATH . 'lib/debugging/debug.php';
 
-    Registry::set('designpath',     ICMS_SYS_PATH . 'designs/');
-    Registry::set('logpath',        ICMS_SYS_PATH . 'logs/frontend/');
-    Registry::set('languagepath',   ICMS_SYS_PATH . 'language/frontend/');
-    Registry::set('templatepath',   ICMS_SYS_PATH . 'templates/frontend/');
-
-    //$config = new EncryptedConfigFile(ICMS_SYS_PATH . 'configs/database.encrypted.conf', 'supersicher');
+    $config = new EncryptedConfigFile(ICMS_SYS_PATH . 'configs/database.encrypted.conf', 'supersicher');
     //$config = new INIConfigFile(ICMS_SYS_PATH . configs/database.conf');
-    $config = new ConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
+    //$config = new ConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
+    $config->set('charset', ENCODING);
     Registry::set('database',       Database::factorFromConfig($config));
     //Registry::set('database',       Database::factory('mysql://root@localhost/test?ci-0001_#utf8'));
+
+    Session::name('sessID');
+    Session::lifetime(10);
+    Session::instance();
+    
+    echo "<pre>";
 
     /*$config->setConfig(array(
         'adapter' => 'mysql',

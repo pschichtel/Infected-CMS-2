@@ -3,7 +3,7 @@
     /**
      *
      */
-    class mysqlResult implements IDatabaseResult
+    class MysqlResult implements IDatabaseResult
     {
         private $result;
 

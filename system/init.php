@@ -12,10 +12,16 @@
     require_once ICMS_SYS_PATH . 'lib/request/request.php';
     require_once ICMS_SYS_PATH . 'lib/response/response.php';
     require_once ICMS_SYS_PATH . 'lib/models/config.php';
+    require_once ICMS_SYS_PATH . 'lib/models/session.php';
     require_once ICMS_SYS_PATH . 'lib/database/database.php';
     require_once ICMS_SYS_PATH . 'lib/controller/frontcontroller.php';
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/configfile.php';
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/iniconfigfile.php';
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/encryptedconfigfile.php';
+
+    Registry::set('designpath',     ICMS_SYS_PATH . 'designs/');
+    Registry::set('logpath',        ICMS_SYS_PATH . 'logs/frontend/');
+    Registry::set('languagepath',   ICMS_SYS_PATH . 'language/frontend/');
+    Registry::set('templatepath',   ICMS_SYS_PATH . 'templates/frontend/');
 
 ?>

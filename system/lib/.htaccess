@@ -1,2 +1,1 @@
-RewriteEngine Off
-deny from all
+#deny from all
