@@ -24,6 +24,5 @@
     Registry::set('design_path',     ICMS_SYS_PATH . 'designs/');
     Registry::set('log_path',        ICMS_SYS_PATH . 'logs/frontend/');
     Registry::set('language_path',   ICMS_SYS_PATH . 'language/frontend/');
-    Registry::set('template_path',   ICMS_SYS_PATH . 'templates/frontend/');
 
 ?>
