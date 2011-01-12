@@ -21,7 +21,7 @@
          * @param string $name the name
          * @return bool true if it exists
          */
-        public static function has($name)
+        public static function exists($name)
         {
             return isset(self::$registry[$name]);
         }
@@ -37,7 +37,7 @@
          */
         public static function set($name, $value)
         {
-            if (!self::has($name))
+            if (!self::exists($name))
             {
                 self::$registry[$name] = $value;
             }
@@ -67,7 +67,7 @@
          */
         public static function &get($name)
         {
-            if (self::has($name))
+            if (self::exists($name))
             {
                 return self::$registry[$name];
             }
@@ -96,7 +96,7 @@
          */
         public static function delete($name)
         {
-            if (self::has($name))
+            if (self::exists($name))
             {
                 unset(self::$registry[$name]);
                 return true;

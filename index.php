@@ -38,6 +38,8 @@
     ));
     $config->save();*/
     var_dump($config->getAll());
+
+    Template::addTemplatePath(ICMS_SYS_PATH . 'templates');
     
 
     try
@@ -56,6 +58,7 @@
     {
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
+
+    echo '</pre>';
     
 ?>
-</pre>

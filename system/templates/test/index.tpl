@@ -1,0 +1,12 @@
+h1>{ModulView:title}</h1>
+<div>
+    {Model:
+    <div>
+        <div>{TITLE}</div>
+        <div>
+            {TEXT}
+        </div>
+        <div>{AUTHOR}</div>
+    </div>
+    }
+</div>
