@@ -4,12 +4,16 @@
      */
     class Template
     {
-        public static $tplPaths = array();
-        public $tplPath;
+        private static $tplPaths = array();
+        private $tplPath;
+        private $lang;
+        private $models;
         
         public function __construct($template)
         {
             $this->tplPath = $this->findTemplate($template);
+            $this->lang = null;
+            $this->models = array();
         }
 
         public static function addTemplatePath($path)
@@ -59,9 +63,32 @@
             }
         }
 
-        protected function parse()
+        public function parse()
         {
             
+        }
+
+        public function setLang(Lang $lang)
+        {
+            $this->lang = $lang;
+        }
+
+        public function addData($name, array $data)
+        {
+            if (!isset($this->models[$name]))
+            {
+                $this->models[$name] = $data;
+            }
+            return $this;
+        }
+
+        public function removeData($name)
+        {
+            if (isset($this->models[$name]))
+            {
+                unset($this->models[$name]);
+            }
+            return $this;
         }
     }
 ?>
