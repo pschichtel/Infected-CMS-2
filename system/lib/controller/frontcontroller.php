@@ -9,6 +9,7 @@
      * Dependencies
      */
     require_once ICMS_SYS_PATH . 'lib/controller/abstractcontroller.php';
+    require_once ICMS_SYS_PATH . 'lib/controller/abstractbasiccontroller.php';
 
     /**
      *

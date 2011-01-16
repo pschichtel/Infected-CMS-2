@@ -46,8 +46,8 @@
     {
         $frontcontroller = new Frontcontroller();
         $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'pages/frontend/');
-        $request = Request::getInstance();
-        $response = Response::getInstance();
+        $request = Request::instance();
+        $response = Response::instance();
         $request->route(new DefaultRouter());
         
         $time = Debug::benchmark(array($frontcontroller, 'run'), array($request, $response), $result);

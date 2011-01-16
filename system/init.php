@@ -18,8 +18,8 @@
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/configfile.php';
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/iniconfigfile.php';
     require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/encryptedconfigfile.php';
-    require_once ICMS_SYS_PATH . 'lib/view/design.php';
     require_once ICMS_SYS_PATH . 'lib/view/template.php';
+    require_once ICMS_SYS_PATH . 'lib/view/design.php';
 
     Registry::set('design_path',     ICMS_SYS_PATH . 'designs/');
     Registry::set('log_path',        ICMS_SYS_PATH . 'logs/frontend/');

@@ -1,3 +1,4 @@
+{ViewHelper<head>:dtd}
 <html>
     <head>
         <title>{ViewHelper<head>:title}</title>
@@ -20,13 +21,17 @@
                         {ViewHelper<menu>:breadcrumb}
                     </div>
                     <div id="content">
-                        {View:content}
+                        {SubTemplate<content>}
                     </div>
                 </div>
             </div>
             <div id="footer">
                 <div>© 2010-2011 Code Infection</div>
             </div>
+            {Model<test>:
+                lol :{
+
+            }
         </div>
     </body>
 </html>

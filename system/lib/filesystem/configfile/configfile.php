@@ -32,7 +32,7 @@
                 $tmp = @file_get_contents($filepath);
                 if ($tmp === false)
                 {
-                    throw new ConfigException('[Configuration::load] The config file exists, butcould not be loaded!', 401);
+                    throw new ConfigException('[Configuration::load] The config file exists, but could not be loaded!', 401);
                 }
                 
                 $tmp = @unserialize($tmp);

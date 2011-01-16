@@ -39,7 +39,7 @@
             }
             else
             {
-                Session::instance()->set('text', 'bla blue blub');
+                Session::instance()->set('text', 'Zufall: ' . mt_rand());
                 echo "text geschrieben!";
             }
             echo "\n\nSession-ID: " . Session::id();
