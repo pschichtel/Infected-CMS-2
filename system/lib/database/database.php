@@ -31,11 +31,12 @@
             {
                 throw new DatabaseException('no database adapter given!', 402);
             }
-            $adapter = ucfirst(strtolower($parsed_pattern['scheme']));
+            $adapter = strtolower($parsed_pattern['scheme']);
             $adapter_path = dirname(__FILE__) . DIRECTORY_SEPARATOR .
                             'adapters' . DIRECTORY_SEPARATOR .
                             $adapter . DIRECTORY_SEPARATOR .
                             'adapter.php';
+            $adapter = ucfirst($adapter);
             if (!file_exists($adapter_path))
             {
                 throw new DatabaseException('database adapter ' . $adapter . ' not found!', 404);

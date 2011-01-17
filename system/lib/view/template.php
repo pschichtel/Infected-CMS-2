@@ -82,11 +82,14 @@
 
         protected function parse($tpl)
         {
-            var_dump(preg_match_all('/\{|\}/', $tpl, $matchesarray, PREG_OFFSET_CAPTURE));
+            $instructions = implode('|', array_keys(self::$instructionSet));
+            $regex = "/\{($instructions)\<([\w\d]+?)\>(\:(.+?))?\}/m";
+            echo htmlspecialchars($regex) . "\n\n\n";
+            var_dump(preg_match_all($regex, $tpl, $matchesarray, PREG_OFFSET_CAPTURE));
             $matchesarray = $matchesarray[0];
             foreach ($matchesarray as $index => $match)
             {
-                echo $match[0];
+                echo htmlspecialchars($match[0]);
             }
 
             echo "\n\n\n\n";
@@ -96,6 +99,7 @@
         public function render()
         {
             $tpl = $this->load();
+            echo htmlspecialchars($tpl) . "\n\n\n";
             $this->parse($tpl);
         }
 
@@ -140,7 +144,7 @@
             return $this;
         }
 
-        public function addViewHelper($name, IViewHelper $viewhelper)
+        public function addViewHelper($name, AbstractViewHelper $viewhelper)
         {
             if (!isset($this->viewHelper[$name]))
             {

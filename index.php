@@ -14,8 +14,8 @@
     require_once ICMS_APP_PATH . 'system/init.php';
     require_once ICMS_SYS_PATH . 'lib/debugging/debug.php';
 
-    $config = new EncryptedConfigFile(ICMS_SYS_PATH . 'configs/database.encrypted.conf', 'supersicher');
-    //$config = new INIConfigFile(ICMS_SYS_PATH . configs/database.conf');
+    //$config = new EncryptedConfigFile(ICMS_SYS_PATH . 'configs/database.encrypted.conf', 'supersicher');
+    $config = new INIConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
     //$config = new ConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
     $config->set('charset', ENCODING);
     Registry::set('database',       Database::factorFromConfig($config));
@@ -37,7 +37,7 @@
         'charset' => 'utf8'
     ));
     $config->save();*/
-    var_dump($config->getAll());
+    //var_dump($config->getAll());
 
     Template::addTemplatePath(ICMS_SYS_PATH . 'templates');
     
