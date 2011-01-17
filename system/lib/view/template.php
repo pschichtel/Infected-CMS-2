@@ -5,11 +5,12 @@
     class Template
     {
         protected static $tplPaths = array();
-        protected static $instructions = array(
-            'viewhelper' => true,
-            'model' => true,
-            'subtemplate' => true,
-            'widget' => true
+        protected static $instructionSet = array(
+            'ViewHelper' => 'instruction_ViewHelper',
+            'Model' => 'instruction_Model',
+            'SubTemplate' => 'instruction_SubTemplate',
+            'Widget' => 'instruction_Widget',
+            'Lang' => 'instruction_Lang'
         );
 
         protected $tplPath;
@@ -155,6 +156,31 @@
                 unset($this->viewHelper[$name]);
             }
             return $this;
+        }
+
+        protected function instruction_ViewHelper()
+        {
+
+        }
+
+        protected function instruction_Model()
+        {
+
+        }
+
+        protected function instruction_SubTemplate()
+        {
+
+        }
+
+        protected function instruction_Widget()
+        {
+
+        }
+
+        protected function instruction_Lang()
+        {
+
         }
     }
 ?>
