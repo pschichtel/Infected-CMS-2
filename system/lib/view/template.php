@@ -5,9 +5,11 @@
     class Template
     {
         protected static $tplPaths = array();
-        protected static $instructionSet = array(
+        protected static $tags = array(
+            'Model' => 'instruction_Model'
+        );
+        protected static $singleTags = array(
             'ViewHelper' => 'instruction_ViewHelper',
-            'Model' => 'instruction_Model',
             'SubTemplate' => 'instruction_SubTemplate',
             'Widget' => 'instruction_Widget',
             'Lang' => 'instruction_Lang'
@@ -82,15 +84,19 @@
 
         protected function parse($tpl)
         {
-            $instructions = implode('|', array_keys(self::$instructionSet));
-            $regex = "/\{($instructions)\<([\w\d]+?)\>(\:(.+?))?\}/m";
+            $tags = implode('|', array_keys(self::$tags));
+            $closeTags = '\\/' . implode('|\\/', array_keys(self::$tags));
+            $singletags = implode('|', array_keys(self::$singleTags));
+
+            $regex = "/\{(?:(?P<stag>ViewHelper)<(?P<sindex>[\w\d]+)>(?::(?P<action>[\w\d]+))?)|(?:(?P<tag>Model)<(?P<index>[\w\d]+)>)|(?:\/(?P<ctag>Model))\}/s";
             echo htmlspecialchars($regex) . "\n\n\n";
             var_dump(preg_match_all($regex, $tpl, $matchesarray, PREG_OFFSET_CAPTURE));
-            $matchesarray = $matchesarray[0];
+            /*$matchesarray = $matchesarray[0];
             foreach ($matchesarray as $index => $match)
             {
                 echo htmlspecialchars($match[0]);
-            }
+            }//*/
+            var_dump($matchesarray);
 
             echo "\n\n\n\n";
 
