@@ -1,5 +1,10 @@
 <html>
     <head>
+{Model<data>}
+
+blubber
+{VARIABLE}
+{/Model}
         <title>{ViewHelper<head>:title}</title>
     </head>
     <body>

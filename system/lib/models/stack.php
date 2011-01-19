@@ -23,7 +23,7 @@
 
         public function push($value)
         {
-            array_push($value);
+            array_push($this->stack, $value);
             $this->size++;
             return $this;
         }
@@ -36,7 +36,14 @@
 
         public function top()
         {
-            return $this->stack[$this->size - 1];
+            if (isset($this->stack[$this->size - 1]))
+            {
+                return $this->stack[$this->size - 1];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public function size()
