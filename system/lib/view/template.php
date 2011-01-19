@@ -1,6 +1,11 @@
 <?php
     /**
-     * 
+     *
+     */
+    require_once ICMS_SYS_PATH . 'lib/models/stack.php';
+    
+    /**
+     *
      */
     class Template
     {
@@ -84,29 +89,100 @@
 
         protected function parse($tpl)
         {
-            $tags = implode('|', array_keys(self::$tags));
-            $closeTags = '\\/' . implode('|\\/', array_keys(self::$tags));
-            $singletags = implode('|', array_keys(self::$singleTags));
+            $tags = array();
+            
+            $openTags = implode('|', array_keys(self::$tags));
+            $singleTags = implode('|', array_keys(self::$singleTags));
 
-            $regex = "/\{(?:(?P<stag>ViewHelper)<(?P<sindex>[\w\d]+)>(?::(?P<action>[\w\d]+))?)|(?:(?P<tag>Model)<(?P<index>[\w\d]+)>)|(?:\/(?P<ctag>Model))\}/s";
-            echo htmlspecialchars($regex) . "\n\n\n";
-            var_dump(preg_match_all($regex, $tpl, $matchesarray, PREG_OFFSET_CAPTURE));
-            /*$matchesarray = $matchesarray[0];
-            foreach ($matchesarray as $index => $match)
+            //$regex = "/\{(?:(?P<stag>ViewHelper)<(?P<sindex>[\w\d]+)>(?::(?P<action>[\w\d]+))?)|(?:(?P<tag>Model)<(?P<index>[\w\d]+)>)|(?:\/(?P<ctag>Model))\}/s";
+            $this->getTagsByRegex($tags, $tpl, 'single', "/\{($singleTags)<([\w\d]+)>(?::([^\}]+))?\}/");
+
+            $this->getTagsByRegex($tags, $tpl, 'open', "/\{($openTags)<([\w\d]+)>\}/");
+
+            $this->getTagsByRegex($tags, $tpl, 'close', "/\{(?:\/($openTags))\}/");
+            
+            ksort($tags, SORT_NUMERIC);
+            //$tags = array_values($tags);
+            var_dump($tags);
+
+            $compiledTemplate = array();
+            $lastPos = 0;
+            $tplLength = strlen($tpl);
+            $tagsCount = count($tags);
+            $tagStack = new Stack();
+
+            echo "$tplLength\n";
+
+            $counter = 1;
+
+            foreach ($tags as $index => &$tag)
             {
-                echo htmlspecialchars($match[0]);
-            }//*/
-            var_dump($matchesarray);
+                $text = trim(substr($tpl, $lastPos, $tag['pos'] - $lastPos));
+                if (!empty($text))
+                {
+                    $text = preg_replace('/>\s+</', '><', $text);
+                    $compiledTemplate[] = $text;
+                }
+                if ($tag['type'] == 'single')
+                {
+                    $compiledTemplate[] = $tags[$index];
+                }
+                elseif ($tag['type'] == 'open')
+                {
+                    $compiledTemplate[] = $tags[$index];
+                    $tagStack->push($tag['name']);
+                }
+                elseif ($tag['type'] == 'close')
+                {
+                    if ($tagStack->top() == $tag['name'])
+                    {
+                        $compiledTemplate[] = $tags[$index];
+                        $tagStack->pop();
+                    }
+                }
+                $lastPos = $tag['pos'] + $tag['length'];
+                $counter++;
+            }
+            $text = trim(substr($tpl, $lastPos));
+            if (!empty($text))
+            {
+                $text = preg_replace('/>\s+</', '><', $text);
+                $compiledTemplate[] = $text;
+            }
+
+            echo "\n\n\n\n";
+
+            var_dump($compiledTemplate);
+
+    printRuntime('Template-Engine');
 
             echo "\n\n\n\n";
 
         }
 
+        protected function getTagsByRegex(array& $array, &$tpl, $type, $regex)
+        {
+            preg_match_all($regex, $tpl, $matchesarray, PREG_OFFSET_CAPTURE);
+
+            foreach ($matchesarray[0] as $index => $match)
+            {
+                $array[$match[1]] = array(
+                    'type'      => $type,
+                    'pos'       => $match[1],
+                    'length'    => strlen($match[0]),
+                    'name'      => $matchesarray[1][$index][0],
+                    'index'     => (empty($matchesarray[2][$index][0]) ? null : $matchesarray[2][$index][0]),
+                    'data'      => (empty($matchesarray[3][$index][0]) ? null : $matchesarray[3][$index][0])
+                );
+            }
+        }
+
         public function render()
         {
-            $tpl = $this->load();
-            echo htmlspecialchars($tpl) . "\n\n\n";
-            $this->parse($tpl);
+            echo " __ __ CALLED __ __\n\n";
+            //$tpl = $this->load();
+            //echo htmlspecialchars($tpl) . "\n\n\n";
+            //$this->parse($tpl);
         }
 
         public function setLang(Lang $lang)
