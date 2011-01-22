@@ -1,5 +1,4 @@
 <?php
-    define('START_TIME', microtime(true));
     define('ENCODING', 'UTF8');
     header('Content-type: text/html;charset=' . ENCODING);
     mb_internal_encoding(ENCODING);
@@ -25,7 +24,7 @@
     Session::name('sessID');
     Session::lifetime(10);
     Session::instance();
-    
+
     echo "<pre>";
 
     /*$config->setConfig(array(
@@ -40,15 +39,8 @@
     $config->save();*/
     //var_dump($config->getAll());
 
-    printRuntime('Master');
-
     Template::addTemplatePath(ICMS_SYS_PATH . 'templates');
 
-    function printRuntime($name)
-    {
-        echo "\n\n$name: " . (microtime(true) - START_TIME) . " seconds\n\n\n\n";
-    }
-    
 
     try
     {
@@ -57,16 +49,16 @@
         $request = Request::instance();
         $response = Response::instance();
         $request->route(new DefaultRouter());
-        
-        $frontcontroller->run($request, $response);
+
+        $time = Debug::benchmark(array($frontcontroller, 'run'), array($request, $response), $result);
+
+        echo "\n\nRuntime: $time seconds\n\n\n\n";
     }
     catch (Exception $e)
     {
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
 
-    printRuntime('Master');
-
     echo '</pre>';
-    
+
 ?>
