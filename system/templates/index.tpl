@@ -4,6 +4,11 @@
 
 <script>blubber{VARIABLE}</script>
 {/Model}
+{Model<data>}
+
+blubber
+{VARIABLE}
+{/Model}
         <title>{ViewHelper<head>:title}</title>
     </head>
     <body>
