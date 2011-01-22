@@ -2,8 +2,7 @@
     <head>
 {Model<data>}
 
-blubber
-{VARIABLE}
+<script>blubber{VARIABLE}</script>
 {/Model}
         <title>{ViewHelper<head>:title}</title>
     </head>
@@ -18,7 +17,9 @@ blubber
             </div>
             {Model<test>}
                 lol :{
-
+                {Model<test2>}
+                    rekursion :S
+                {/Model}
             {/Model}
         </div>
     </body>
