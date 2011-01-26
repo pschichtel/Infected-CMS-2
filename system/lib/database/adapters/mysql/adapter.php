@@ -2,8 +2,9 @@
     /**
      * Dependencies
      */
-    require_once dirname(__FILE__) . '/query.php';
-    require_once dirname(__FILE__) . '/result.php';
+    define('__DATABASE_ADAPTER_MYSQL', dirname(__FILE__) . '/');
+    require_once __DATABASE_ADAPTER_MYSQL . 'query.php';
+    require_once __DATABASE_ADAPTER_MYSQL . 'result.php';
 
     class MysqlAdapter implements IDatabaseAdapter
     {

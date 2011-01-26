@@ -1,9 +1,6 @@
                         ToDo :: Infected Framework - IFw
                                                                                 
 
-Add: \configuration
-    - INI-Datei Interface für parsistente Configurationen
-    - verschlüsselte configs
 
 Add: \image
     - Klasse zur Grafikmanipulation
@@ -19,14 +16,11 @@ text
     - neuer Name
     - Refactoring
 
-pagebrowser
-    - Klasse zum Erstellen von Page-Navigationen
-
-menu
-    - dynamisches menü
-
-breadcrumb
-    - dynamisches breadcrumb menu
+viewhelper:
+    - pagebrowser: Klasse zum Erstellen von Page-Navigationen
+    - menu: für menüs (zB breadcrumb)
+    - head: für head infos (DTD, meta tags, css, scripts, ...)
+    
 
 frontcontroller
     - FrontController-Klasse zum Verarbeiten des Requests (\data::request)

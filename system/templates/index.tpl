@@ -1,9 +1,9 @@
 <html>
     <head>
-{Model<data>}
+{ForEach<data>}
 
 <script>blubber{VARIABLE}</script>
-{/Model}
+{/ForEach}
         <title>{ViewHelper<head>:title}</title>
     </head>
     <body>
@@ -15,12 +15,14 @@
                     </div>
                 </div>
             </div>
-            {Model<test>}
+            {ForEach<test>}
                 lol :{
-                {Model<test2>}
-                    rekursion :S
-                {/Model}
-            {/Model}
+                {If<cond>}
+                    {ForEach<test2>}
+                        rekursion :S
+                    {/ForEach}
+                {/If}
+            {/ForEach}
         </div>
     </body>
 </html>

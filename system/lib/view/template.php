@@ -1,9 +1,16 @@
 <?php
     /**
-     *
+     * Dependencies
      */
     require_once ICMS_SYS_PATH . 'lib/models/stack.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateparser/templateparser.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/templateparser.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/itag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/iftag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/foreachtag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/viewhelpertag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/subtemplatetag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/widgettag.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/langtag.php';
 
     /**
      *
@@ -11,15 +18,6 @@
     class Template
     {
         protected static $tplPaths = array();
-        protected static $tags = array(
-            'Model' => 'instruction_Model'
-        );
-        protected static $singleTags = array(
-            'ViewHelper' => 'instruction_ViewHelper',
-            'SubTemplate' => 'instruction_SubTemplate',
-            'Widget' => 'instruction_Widget',
-            'Lang' => 'instruction_Lang'
-        );
 
         protected $tplPath;
         protected $lang;
@@ -96,8 +94,6 @@
             echo htmlspecialchars($tpl) . "\n\n\n";
 
             $parser = new TemplateParser();
-            $parser->setTags(self::$tags);
-            $parser->setSingleTags(self::$singleTags);
             $tpl = $parser->parse($tpl);
 
         }

@@ -57,7 +57,14 @@
          */
         public function serialize()
         {
-            serialize(array($this->name, $this->index, $this->data, $this->level, $this->children));
+            return serialize(array(
+                $this->name,
+                $this->index,
+                $this->data,
+                $this->level,
+                $this->children,
+                $this->content
+            ));
         }
 
         /**
@@ -72,6 +79,7 @@
             $this->level = $data[3];
             $this->children = $data[4];
             $this->parent = null;
+            $this->content = $data[5];
         }
 
 

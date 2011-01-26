@@ -3,8 +3,8 @@
      * Dependencies
      */
     require_once ICMS_SYS_PATH . 'lib/models/stack.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateparser/nodes/nodes.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateparser/nodes/nodelist.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/nodes/nodes.php';
+    require_once ICMS_SYS_PATH . 'lib/view/templateengine/nodes/nodelist.php';
     
     /**
      *
@@ -13,36 +13,63 @@
     {
         protected $tags;
         protected $singleTags;
+        protected $preserveWhitespace;
 
         public function __construct()
         {
-            $this->tags = array();
-            $this->singleTags = array();
+            $this->tags = array(
+                'ForEach' => new ForEachTag(),
+                'If' => new IfTag()
+            );
+            $this->singleTags = array(
+                'ViewHelper' => new ViewHelperTag(),
+                'SubTemplate' => new SubTemplatesTag(),
+                'Widget' => new WidgetTag(),
+                'Lang' => new LangTag()
+            );
+            $this->preserveWhitespace = false;
         }
 
-        public function setTags(array $tags)
+        public function addTag($name, ITag $tag)
         {
-            $this->tags = $tags;
+            $this->tags['name'] = $tag;
         }
 
-        public function getTags()
+        public function getTag($name)
         {
-            return $this->tags;
+            return $this->tag[$name];
         }
 
-        public function setSingleTags(array $tags)
+        public function addSingleTag($name, ITag $tag)
         {
-            $this->singleTags = $tags;
+            $this->singleTags[$name] = $tag;
         }
 
-        public function getSingleTags()
+        public function getSingleTag($name)
         {
-            return $this->singleTags;
+            return $this->singleTags[$name];
+        }
+
+        public function preserveWhitespace($preserve = null)
+        {
+            if ($preserve === null)
+            {
+                return $this->preserveWhitespace;
+            }
+            else
+            {
+                $this->preserveWhitespace = ($preserve ? true : false);
+            }
         }
 
         protected function stripWhitespace($string)
         {
-            return preg_replace(array('/>\s+/', '/\s+</', "/\r\n/"), array('>', '<', "\n"), $string);
+            if (!$this->preserveWhitespace)
+            {
+                $string = trim($string);
+                $string = preg_replace(array('/>\s+/', '/\s+</', "/\r\n/"), array('>', '<', "\n"), $string);
+            }
+            return $string;
         }
         
         public function parse($tpl)
@@ -73,10 +100,9 @@
 
             foreach ($tags as $index => &$tag)
             {
-                $text = trim(substr($tpl, $lastPos, $tag['pos'] - $lastPos));
+                $text = $this->stripWhitespace(substr($tpl, $lastPos, $tag['pos'] - $lastPos));
                 if (!empty($text))
                 {
-                    $text = $this->stripWhitespace($text);
                     $node = new TextNode($active->level + 1, $active);
                     $node->content = $text;
                     $active->children->addNode($node);
@@ -91,6 +117,7 @@
                         $active->level + 1,
                         $active
                     ));
+                    $root->nodes[] =& $active->children->last;
                 }
                 elseif ($tag['type'] == 'open')
                 {
@@ -102,7 +129,7 @@
                         $active
                     ));
                     $active =& $active->children->last;
-                    $tagStack->push($tag['name']);
+                    $tagStack->push($tag['name']); 
                 }
                 elseif ($tag['type'] == 'close')
                 {
@@ -124,16 +151,24 @@
                 throw new ViewException('[TemplateParser::parse] There are unclosed tags!', 401);
             }
 
-            $text = trim(substr($tpl, $lastPos));
+            $text = $this->stripWhitespace(substr($tpl, $lastPos));
             if (!empty($text))
             {
-                $text = $this->stripWhitespace($text);
                 $node = new TextNode($active->level + 1, $active);
                 $node->content = $text;
                 $active->children->addNode($node);
             }
 
+            //$root->register = array_merge($root->ifTags, $root->register, $root->forEachTags);
+
             echo "\n\n\n\n";
+
+            //echo htmlspecialchars(print_r($root, true));
+
+            $name = 'tpl_' . md5(1234123) . '.cached';
+            file_put_contents($name, serialize($root));
+
+            $root = unserialize(file_get_contents($name));
 
             echo htmlspecialchars(print_r($root, true));
 
