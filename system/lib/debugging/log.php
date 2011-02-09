@@ -8,10 +8,10 @@
          * the loglevel which controls the logger
          *
          * @static
-         * @access public
+         * @access protected
          * @var int
          */
-        public static $loglevel = 5;
+        protected static $loglevel = 5;
 
         /**
          *
@@ -138,7 +138,29 @@
                 $timestamp = date('d.m.y H:i:s');
                 $message = str_replace("\n", ' ', $message);
                 $message = str_replace("\r", ' ', $message);
+                flock($this->fhandle, LOCK_EX);
                 @fwrite($this->fhandle, "[$timestamp][$entryType] $message\n");
+                flock($this->fhandle, LOCK_UN);
+            }
+        }
+
+        public static function logLevel($level = null)
+        {
+            if ($level === null)
+            {
+                return self::$loglevel;
+            }
+            else
+            {
+                if ($level < 0 || $level > 5)
+                {
+                    return false;
+                }
+                else
+                {
+                    self::$loglevel = $level;
+                    return true;
+                }
             }
         }
     }

@@ -5,74 +5,25 @@
     class Debug
     {
         /**
-         * prints $message and a backtrace.
-         *
-         * @access public
-         * @static
-         * @param string $message the error message to print
-         * @param bool $die if true, te scripts ends
-         */
-        public static function triggerError($message, $die = false)
-        {
-            $backtrace = debug_backtrace();
-            unset($backtrace[0]);
-            $counter = count($backtrace);
-
-            echo '<div style="background-color:white;margin-bottom:5px;color:black">';
-            echo '<span style="text-decoration: underline;">Error triggered, ' . ($die ? 'script ends here!' : 'but just backtracing ...') . '</span><br>';
-            echo 'Message: ' . htmlspecialchars($message) . '<br />';
-            echo 'Backtrace:<br />';
-            if (DEBUG > 0)
-            {
-                foreach ($backtrace as $value)
-                {
-                    $line = 'Level ' . $counter . ': <strong>';
-                    $line .= (isset($value['class']) ? $value['class'] . '::' : '');
-                    $line .= $value['function'] . '()</strong>';
-                    $line .= ' in <strong>' . (isset($value['file']) ? basename($value['file']) : 'Unknown') . '</strong>';
-                    $line .= ' on Line <strong>' . (isset($value['line']) ? $value['line'] : '0') . '</strong>';
-                    $line .= '<br />';
-                    echo $line;
-                    $counter--;
-                }
-            }
-            else
-            {
-                echo 'Debugging is deactivated: backtrace hidden!';
-            }
-            echo '</div>';
-            if ($die)
-            {
-                die();
-            }
-        }
-
-        /**
          * a var_dump() wrapper for multible parameters
          *
          * @access public
          * @static
          * @param mixed the variables to dump
          */
-        public static function dump_vars()
+        public static function var_dump()
         {
-            $args = func_get_args();
-            echo '<pre style="background-color:white;margin-bottom:5px;color:black!important">';
-            if (DEBUG > 0)
+            if (Registry::get('debug.allow', false))
             {
-                ob_start();
-                foreach ($args as $arg)
-                {
-                    var_dump($arg);
-                    echo "\n\n";
-                }
-                echo htmlspecialchars(ob_get_clean());
+                $args = func_get_args();
+                echo '<pre>';
+                call_user_func_array('var_dump', $args);
+                echo '</pre>';
             }
             else
             {
-                echo 'Debugging is deactivated: var-dump hidden!';
+                echo 'Debugging is deactivated: var_dump hidden!';
             }
-            echo '</pre>';
         }
 
         /**
@@ -93,49 +44,13 @@
                 return;
             }
             $errstr = strip_tags($errstr);
-            $errfile = (isset($errfile) ? basename($errfile) : '');
-            $errline = (isset($errline) ? $errline : '');
-            $errcontext = (isset($errcontext) ? $errcontext : '');
+            $errfile = (isset($errfile) ? basename($errfile) : 'unknown');
+            $errline = (isset($errline) ? $errline : 'unknown');
 
-            $errortype = '';
-
-            switch ($errno)
-            {
-                case E_ERROR:
-                    $errortype = 'error';
-                    break;
-                case E_WARNING:
-                    $errortype = 'warning';
-                    break;
-                case E_NOTICE:
-                    $errortype = 'notice';
-                    break;
-                case E_STRICT:
-                    $errortype = 'strict';
-                    break;
-                case E_DEPRECATED:
-                    $errortype = 'deprecated';
-                    break;
-                case E_RECOVERABLE_ERROR:
-                    $errortype = 'recoverable error';
-                    break;
-                case E_USER_ERROR:
-                    $errortype = 'usererror';
-                    break;
-                case E_USER_WARNING:
-                    $errortype = 'user warning';
-                    break;
-                case E_USER_NOTICE:
-                    $errortype = 'user notice';
-                    break;
-                case E_USER_DEPRECATED:
-                    $errortype = 'user deprecated';
-                    break;
-                default:
-                    $errortype = 'unknown';
-            }
+            $errortype = self::getErrorTypeStr($errno);
+            
             self::log_error($errortype, '[' . $errfile . ':' . $errline . '] ' . $errstr);
-            if (CoreConfig::DEBUG > 0)
+            if (Registry::get('debug.printErrors', false))
             {
                 echo "$errortype occurrered in [$errfile:$errline]:<br />Message: $errstr<br />";
             }
@@ -162,6 +77,7 @@
          * @access public
          * @static
          * @param string $text the text to write in the log file
+         * @todo use logger
          */
         public static function log_error($type, $text)
         {
@@ -179,7 +95,7 @@
 
         }
 
-        public static function getErrorType($errno)
+        public static function getErrorTypeStr($errno)
         {
             switch ($errno)
             {

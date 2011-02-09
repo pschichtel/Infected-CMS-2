@@ -65,13 +65,16 @@
          * @param string $name the name
          * @return mixed the entry value
          */
-        public static function &get($name)
+        public static function &get($name, $default = null)
         {
             if (self::exists($name))
             {
                 return self::$registry[$name];
             }
-            return null;
+            else
+            {   
+                return $default;
+            }
         }
 
         /**
