@@ -20,7 +20,7 @@
             
             $this->activeDesign = $this->getActiveDesign();
             self::$designName = $this->activeDesign;
-            $this->config = new INIConfigFile(Registry::get('design_path') . $this->activeDesign . '/design.ini');
+            $this->config = new INIConfigFile(Registry::get('tpl.design_path') . $this->activeDesign . '/design.ini');
 
             parent::__construct('index.tpl');
         }
