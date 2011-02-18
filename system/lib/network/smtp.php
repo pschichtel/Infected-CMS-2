@@ -1,10 +1,4 @@
 <?php
-
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'text/text.php';
-    
     /**
      *
      */

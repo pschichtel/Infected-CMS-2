@@ -1,9 +1,4 @@
-<?php
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/image/imageexception.php';
-    
+<?php    
     /**
      *
      */

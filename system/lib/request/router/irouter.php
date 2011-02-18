@@ -1,9 +1,5 @@
 <?php
     /**
-     * Dependencies
-     */
-
-    /**
      *
      */
     interface IRouter

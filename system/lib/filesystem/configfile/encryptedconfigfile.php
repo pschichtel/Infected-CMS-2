@@ -1,12 +1,5 @@
 <?php
     /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/configfileexception.php';
-    require_once ICMS_SYS_PATH . 'lib/filesystem/configfile/iconfigfile.php';
-    require_once ICMS_SYS_PATH . 'lib/text/crypter/aescrypter.php';
-
-    /**
      *
      */
     class EncryptedConfigFile implements IConfigFile

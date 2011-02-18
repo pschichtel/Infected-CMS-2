@@ -1,13 +1,4 @@
-<?php
-
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/text/text.php';
-    require_once ICMS_SYS_PATH . 'lib/text/stringparser/stringparser.php';
-    require_once ICMS_SYS_PATH . 'lib/text/geshi/geshi.php';
-    //require_once ICMS_SYS_PATH . 'lib/text';
-    
+<?php    
     /**
      *
      */

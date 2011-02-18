@@ -1,9 +1,5 @@
 <?php
     /**
-     * Dependencies
-     */
-
-    /**
      * 
      */
     class Design extends Template

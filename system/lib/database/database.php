@@ -1,14 +1,6 @@
 <?php
 
     /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/database/databaseexception.php';
-    require_once ICMS_SYS_PATH . 'lib/database/idatabaseadapter.php';
-    require_once ICMS_SYS_PATH . 'lib/database/idatabaseresult.php';
-    require_once ICMS_SYS_PATH . 'lib/database/idatabasequery.php';
-
-    /**
      * 
      */
     abstract class Database

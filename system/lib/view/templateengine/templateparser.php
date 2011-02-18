@@ -1,12 +1,5 @@
 <?php
     /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/models/stack.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/nodes/nodes.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/nodes/nodelist.php';
-    
-    /**
      *
      */
     class TemplateParser

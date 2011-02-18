@@ -1,18 +1,5 @@
 <?php
     /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/models/stack.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/templateparser.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/itag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/iftag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/foreachtag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/viewhelpertag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/subtemplatetag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/widgettag.php';
-    require_once ICMS_SYS_PATH . 'lib/view/templateengine/tags/langtag.php';
-
-    /**
      *
      */
     class Template
