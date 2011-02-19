@@ -1,5 +1,5 @@
 <?php
-    class ViewHelperTag implements ITag
+    class ViewhelperTag implements ITag
     {
         public function render(Node& $node, array $data)
         {

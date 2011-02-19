@@ -10,13 +10,25 @@
 
         public function __construct()
         {
+            $tags = glob(ICMS_SYS_PATH . 'lib/view/templateengine/tags/*tag.php');
+            $count = count($tags);
+            $map = array();
+            for ($i = 0; $i < $count; $i++)
+            {
+                $tags[$i] = str_replace(ICMS_SYS_PATH, '', $tags[$i]);
+                $class = ucfirst(preg_replace('/tag$/', 'Tag', strtolower(basename($tags[$i], '.php'))));
+                $map[$class] = $tags[$i];
+            }
+
+            Autoloader::addClassMap($map);
+            
             $this->tags = array(
-                'ForEach' => new ForEachTag(),
+                'ForEach' => new ForeachTag(),
                 'If' => new IfTag()
             );
             $this->singleTags = array(
-                'ViewHelper' => new ViewHelperTag(),
-                'SubTemplate' => new SubTemplatesTag(),
+                'ViewHelper' => new ViewhelperTag(),
+                'SubTemplate' => new SubtemplateTag(),
                 'Widget' => new WidgetTag(),
                 'Lang' => new LangTag()
             );

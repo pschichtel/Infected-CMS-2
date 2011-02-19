@@ -1,0 +1,34 @@
+{ViewHelper<head>:dtd}{ViewHelper<head>:}
+<html>
+    <head>
+        <title>{ViewHelper<head>:title}</title>
+        {ViewHelper<head>:css}
+        {ViewHelper<head>:script}
+        {ViewHelper<head>:meta}
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <div id="name">{ViewHelper<head>:title}</div>
+                <div id="loginwidget">
+                    {If<registered>}
+                        {Widget<login>}
+                    {/If}
+                </div>
+            </div>
+            <div id="topnavi">
+                {ViewHelper<menu>:navi,2}
+            </div>
+            <div id="colcontainer">
+                <div id="col_right">
+                    <div id="breadcrumb">{ViewHelper<menu>:breadcrump}</div>
+                    <div id="content">{SubTemplate<content>}</div>
+                </div>
+                <div id="col_left">
+                    {ViewHelper<menu>:navi,1}
+                </div>
+            </div>
+            <div id="footer">© 2010 - 2011 by Code Infection</div>
+        </div>
+    </body>
+</html>

@@ -1,5 +1,5 @@
 <?php
-    class SubTemplatesTag implements ITag
+    class SubtemplateTag implements ITag
     {
         public function render(Node& $node, array $data)
         {
