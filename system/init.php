@@ -2,7 +2,7 @@
     defined('DS')               or define('DS', DIRECTORY_SEPARATOR);
     defined('ICMS_SYS_PATH')    or define('ICMS_SYS_PATH',  dirname(__FILE__) . DS);
 
-    require_once ICMS_SYS_PATH . 'lib/util/autoloader.php';
+    require_once ICMS_SYS_PATH . 'lib/Util/Autoloader.php';
     Autoloader::register();
     Autoloader::addClassMap();
 

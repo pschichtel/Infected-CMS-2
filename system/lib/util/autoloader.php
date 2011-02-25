@@ -41,18 +41,54 @@
             if ($map !== null)
             {
                 self::$classmap = array_merge(self::$classmap, $map);
+                return true;
             }
             elseif (!$classmapLoaded && file_exists(ICMS_SYS_PATH . 'lib/classmap.php'))
             {
                 $map = include_once ICMS_SYS_PATH . 'lib/classmap.php';
                 self::$classmap = array_merge(self::$classmap, $map);
                 $classmapLoaded = true;
+                return true;
 
             }
             else
             {
                 return false;
             }
+        }
+        
+        public static function addSysDirectoryToMap($path)
+        {
+            $path = preg_replace(array('/^(\\|\/)/', '/(\\|\/)$/'), '', $path) . DS;
+            
+            if (!file_exists(ICMS_SYS_PATH . $path))
+            {
+                return false;
+            }
+            
+            $dir = opendir(ICMS_SYS_PATH . $path);
+            if ($dir === false)
+            {
+                return false;
+            }
+            
+            $map = array();
+            
+            while (($entry = readdir($dir)))
+            {
+                if (is_file(ICMS_SYS_PATH . $path . $entry))
+                {
+                    $map[basename($entry, '.php')] = $path . $entry;
+                }
+            }
+            closedir($dir);
+            
+            return self::addClassMap($map);
+        }
+        
+        public static function getClassMap()
+        {
+            return self::$classmap;
         }
     }
 ?>
