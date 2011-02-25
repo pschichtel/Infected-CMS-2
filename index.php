@@ -59,7 +59,7 @@
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
     
-    var_dump(Autoloader::getClassMap());
+    var_dump(Loader::getClassMap());
 
     echo '</pre>';
 

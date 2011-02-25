@@ -1,11 +1,8 @@
 <?php
-    /**
-     * Dependencies
-     */
-    define('__DATABASE_ADAPTER_MYSQL', dirname(__FILE__) . '/');
-    require_once __DATABASE_ADAPTER_MYSQL . 'query.php';
-    require_once __DATABASE_ADAPTER_MYSQL . 'result.php';
 
+    /**
+     * 
+     */
     class MysqlAdapter implements IDatabaseAdapter
     {
         private $host;
@@ -38,7 +35,7 @@
         public function QueryBuilder()
         {
             $this->connect();
-            return new mysqlQuery($this->dbhandle);
+            return new MysqlQuery($this->dbhandle);
         }
         
         public function __construct($data)
@@ -109,7 +106,7 @@
             }
             else
             {
-                return new mysqlResult($result);
+                return new MysqlResult($result);
             }
         }
 

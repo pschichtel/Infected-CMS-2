@@ -11,7 +11,7 @@
         public function __construct()
         {
 
-            Autoloader::addSysDirectoryToMap('lib/view/templateengine/tags');
+            Loader::addSysDirectoryToMap('lib/view/templateengine/tags');
             
             $this->tags = array(
                 'ForEach' => new ForeachTag(),

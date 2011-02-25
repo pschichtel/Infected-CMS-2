@@ -1,6 +1,6 @@
 <?php
     /**
-     * 
+     * Abstract base class for basic controller which provides basic functionality
      */
     abstract class AbstractBasicController extends AbstractController
     {

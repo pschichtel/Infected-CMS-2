@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * 
+     * Factory class to get a specified database adapter
      */
     abstract class Database
     {
@@ -17,39 +17,43 @@
 
             if ($parsed_pattern ===  false)
             {
-                throw new DatabaseException('database connection pattern is invalid!', 401);
+                throw new DatabaseException('Database::factory(1): The database connection pattern is invalid!', 401);
             }
             if (!isset($parsed_pattern['scheme']))
             {
-                throw new DatabaseException('no database adapter given!', 402);
+                throw new DatabaseException('Database::factory(1): No database adapter given!', 402);
             }
-            $adapter = strtolower($parsed_pattern['scheme']);
-            $adapter_path = dirname(__FILE__) . DIRECTORY_SEPARATOR .
-                            'adapters' . DIRECTORY_SEPARATOR .
-                            $adapter . DIRECTORY_SEPARATOR .
-                            'adapter.php';
-            $adapter = ucfirst($adapter);
-            if (!file_exists($adapter_path))
+            $adapter = ucfirst(strtolower($parsed_pattern['scheme']));
+            
+            try
             {
-                throw new DatabaseException('database adapter ' . $adapter . ' not found!', 404);
+                Loader::addSysDirectoryToMap('lib/Database/Adapters/' . $adapter);
             }
-
-            require_once $adapter_path;
+            catch (Exception $e)
+            {
+                throw new DatabaseException('Database::factory(1): Failed to add the adapter path to the loader!', 407);
+            }
+            
             $adapter .= 'Adapter';
+            
+            if (!Loader::load($adapter))
+            {
+                throw new DatabaseException('Database::factory(1): database adapter ' . $adapter . ' could not be loaded!', 404);
+            }
 
             if (!class_exists($adapter))
             {
-                throw new DatabaseException('the given database adapter is invalid', 403);
+                throw new DatabaseException('Database::factory(1): the given database adapter is invalid', 403);
             }
 
             if (in_array('IDatabaseAdapter', class_implements($adapter)) !== true)
             {
-                throw new DatabaseException('the given database adapter is invalid', 403);
+                throw new DatabaseException('Database::factory(1): The given database adapter is invalid', 405);
             }
 
             if (!$adapter::validate($parsed_pattern))
             {
-                throw new DatabaseException('the pattern validation failed for the fiven adapter!', 405);
+                throw new DatabaseException('Database::factory(1): The pattern validation failed for the fiven adapter!', 406);
             }
             $instance = new $adapter($parsed_pattern);
             self::$adapterInstances[$pattern] = $instance;

@@ -1,6 +1,6 @@
 <?php
     /**
-     *
+     * Interface which must be implemented by every database adapter
      */
     interface IDatabaseAdapter
     {

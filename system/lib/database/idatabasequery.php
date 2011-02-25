@@ -1,6 +1,6 @@
 <?php
     /**
-     *
+     * interface which should be implemented by database query builders
      */
     interface IDatabaseQuery
     {

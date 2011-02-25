@@ -1,6 +1,6 @@
 <?php
     /**
-     * 
+     * Just codebase for the new interface
      */
     class _Database
     {

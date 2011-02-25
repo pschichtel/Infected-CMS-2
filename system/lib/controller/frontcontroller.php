@@ -5,14 +5,9 @@
      */
     EventManager::registerEvent(new Event('onBeforeControllerExec'));
     EventManager::registerEvent(new Event('onAfterControllerExec'));
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/controller/abstractcontroller.php';
-    require_once ICMS_SYS_PATH . 'lib/controller/abstractbasiccontroller.php';
 
     /**
-     *
+     * The Frontcontroller which runs the requested page
      */
     final class Frontcontroller
     {

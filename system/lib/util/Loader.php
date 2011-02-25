@@ -1,15 +1,18 @@
 <?php
-    abstract class Autoloader
+    /**
+     * 
+     */
+    abstract class Loader
     {
         protected static $classmap = array();
         
-        public static function register($callback = null)
+        public static function registerAutoloader($callback = null)
         {
             if ($callback !== null)
             {
                 if (is_callable($callback))
                 {
-                    spl_autoload_register($callback);
+                    return spl_autoload_register($callback);
                 }
                 else
                 {
@@ -18,21 +21,25 @@
             }
             else
             {
-                spl_autoload_register(array('Autoloader', 'autoload'));
+                return spl_autoload_register(array('Loader', 'autoload'));
             }
         }
 
-        public static function unregister($callback)
+        public static function unregisterAutoloader($callback = null)
         {
-            return spl_autoload_unregister($callback);
+            if ($callback !== null)
+            {
+                return spl_autoload_unregister($callback);
+            }
+            else
+            {
+                return spl_autoload_unregister(array('Loader', 'autoload'));
+            }
         }
 
         public static function autoload($name)
         {
-            if (isset(self::$classmap[$name]))
-            {
-                require_once ICMS_SYS_PATH . self::$classmap[$name];
-            }
+            self::load($name);
         }
 
         public static function addClassMap(array $map = null)
@@ -63,13 +70,13 @@
             
             if (!file_exists(ICMS_SYS_PATH . $path))
             {
-                return false;
+                throw new Exception('Autoloader::addSysDirectoryToMap(1): Directory not found!');
             }
             
             $dir = opendir(ICMS_SYS_PATH . $path);
             if ($dir === false)
             {
-                return false;
+                throw new Exception('Autoloader::addSysDirectoryToMap(1): Directory could not be read!');
             }
             
             $map = array();
@@ -89,6 +96,24 @@
         public static function getClassMap()
         {
             return self::$classmap;
+        }
+        
+        public static function exists($name)
+        {
+            return isset(self::$classmap[$name]);
+        }
+        
+        public static function load($name)
+        {
+            if (self::exists($name))
+            {
+                require_once ICMS_SYS_PATH . self::$classmap[$name];
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 ?>

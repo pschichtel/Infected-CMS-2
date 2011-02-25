@@ -1,6 +1,6 @@
 <?php
     /**
-     *
+     * Abstract base class which must be implemented by every controller
      */
     abstract class AbstractController
     {

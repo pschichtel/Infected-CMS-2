@@ -1,7 +1,7 @@
 <?php
 
     /**
-     *
+     * Interface which should be implemented by database result classes
      */
     interface IDatabaseResult
     {
