@@ -2,89 +2,121 @@
     /**
      *
      */
-    class SMTP
+    class Smtp
     {
         /**
          * Email successfully sent
          */
         const OK                =  0;
+        
         /**
          * Remote connection failed
          */
-        const CONNECTION_FAILED = -1;
+        const CONNECTION_FAILURE = -1;
+        
         /**
-         * failed at HELO
+         * The responded with the wrong status code
          */
-        const HELO_FAILED       = -2;
+        const INVALID_RESPONSE = -2;
+        
         /**
-         * incorrect username was given and login failed
+         * Failed to send a command
          */
-        const WRONG_USER        = -3;
+        const SEND_FAILURE = -3;
+        
         /**
-         * incorrect password was given and login failed
+         * An unknown error occurred
          */
-        const WRONG_PASS        = -4;
+        const UNKNOWN           = 1;
+        
+        protected $config;
+        protected $connection;
+        protected $connected;
+        protected $error;
+
         /**
-         * failed at RCPT command, this has to be a valid email address as well
+         * Creates a object of the Smtp-class if a valid configuration was given.
+         * Throws a NetworkException an failure.
+         *
+         * @access public
+         * @param string[] $config the configuration
          */
-        const WRONG_FROM        = -5;
+        public function __construct(array $config)
+        {
+            if (!$this->validateConfig($config))
+            {
+                throw new NetworkException('[Smtp::__construct] The given configuration array does not contain the needed keys!');
+            }
+            $this->config = $config;
+            $this->connection = null;
+            $this->connected = false;
+        }
+        
         /**
-         * failed at DATA command, maybe there were invalid or broken characters given (charset mismatches?)
+         * Destructs the objects
+         * 
+         * @access public
          */
-        const WRONG_RCPT        = -6;
+        public function __destruct()
+        {
+            $this->disconnect();
+        }
+        
         /**
-         * completation of the data block failed
+         * Gets the last error
+         *
+         * @access public
+         * @return string the last occurred or a empty string
          */
-        const DATA_FAILED       = -7;
-        /**
-         * completation of the data block failed
-         */
-        const COMPLETE_FAILED   = -8;
-        /**
-         * an unknown error occurred
-         */
-        const UNKNOWN           = -9;
+        public function error()
+        {
+            $tmp = $this->error;
+            $this->error = '';
+            return $tmp;
+        }
 
         /**
          * Validates the given array
          *
+         * @access protected
          * @param array $config the configuration-array to validate
          * @return bool whether the configuration-array is valid or not
          */
-        private static function validateConfig(&$config)
+        protected function validateConfig(array& $config)
         {
-            return isset($config['host'], $config['port'], $config['user'], $config['pass'], $config['sender']);
+            return isset($config['host'], $config['port'], $config['sender']);
         }
-
-        private function __construct($config)
-        {
-            $this->config = $config;
-        }
-
+        
         /**
-         * Generates a new SMTP-object
-         *
-         * @param mixed $config the configuration
-         * @param bool $ini_file if true $config is used as the filepath to an ini-file with the configuration
-         * @return SMTP
+         * Opens a socket connection to the Smtp server
+         * 
+         * @access protected
          */
-        public static function factory($config, $ini_file = false)
+        protected function connect()
         {
-            if ($ini_file)
+            if ($this->connected)
             {
-                $config = parse_ini_file($config);
+                throw new NetworkException('', Smtp::CONNECTION_FAILURE);
             }
-            if (!is_array($config))
+            $this->connection = fsockopen($this->config['host'], $this->config['port'], $errno, $errstr, 3);
+            if ($this->connection === false)
             {
-                return false;
+                throw new NetworkException('Failed to connect to the remote server!', Smtp::CONNECTION_FAILURE);
             }
-            elseif (!self::validateConfig($config))
+            $this->connected = true;
+        }
+        
+        /**
+         * Closes the connection the the Smtp server if stil open
+         * 
+         * @access protected
+         */
+        protected function disconnect()
+        {
+            if ($this->connected && is_resource($this->connection))
             {
-                return false;
-            }
-            else
-            {
-                return new SMTP($config);
+                @fclose($this->connection);
+                $this->connected = false;
             }
         }
 
@@ -92,117 +124,102 @@
         /**
          * sends an email with the given data
          *
-         * @static
          * @access public
          * @param string $to address to send to
          * @param string $from the sender address
          * @param string $subject the subject of the email
          * @param string $text the email content
-         * @param array $headers additional headers
-         * @return int return code
+         * @param string[] $headers additional headers
+         * @return int return code, 0 un success
          */
-        public function mail($to, $from, $subject, $text, $headers = null)
+        public function mail($to, $from, $subject, $text, array $headers = array())
         {
-            $smtp = fsockopen($this->config['host'], $this->config['port'], $errno, $errstr, 3);
-            if ($smtp === false)
+            try
             {
-                return self::CONNECTION_FAILED;
-            }
-            if (!$this->parse($this->receive($smtp), 220))
-            {
-                return self::UNKNOWN;
-            }
-            if (!$this->send($smtp, 'HELO ' . $_SERVER['SERVER_NAME'], 250))
-            {
-                return self::HELO_FAILED;
-            }
-            if ($this->config['user'] && $this->config['pass'])
-            {
-                if (!$this->send($smtp, 'AUTH LOGIN', 334))
+                $this->connect();
+                
+                $servername = 'localhost';
+                if (isset($_SERVER['SERVER_NAME']) && trim($_SERVER['SERVER_NAME']) !== '')
                 {
-                    return self::UNKNOWN;
+                    $servername = $_SERVER['SERVER_NAME'];
                 }
-                if (!$this->send($smtp, base64_encode($this->config['user']), 334))
+                
+                $this->parseResponse($this->receive(), 220);
+                $this->send('HELO ' . $servername, 250);
+                if (isset($this->config['user'], $this->config['pass']))
                 {
-                    return self::WRONG_USER;
+                    if (!empty($this->config['user']) && !empty($this->config['pass']))
+                    {
+                        $this->send('AUTH LOGIN', 334);
+                        $this->send(base64_encode($this->config['user']), 334);
+                        $this->send(base64_encode($this->config['pass']), 235);
+                    }
                 }
-                if (!$this->send($smtp, base64_encode($this->config['pass']), 235))
-                {
-                    return self::WRONG_PASS;
-                }
-            }
-            if (!$this->send($smtp, 'MAIL FROM: ' . $this->config['sender'] . '', 250))
-            {
-                return self::WRONG_FROM;
-            }
-            if (!$this->send($smtp, 'RCPT TO: ' . $to . '', 250))
-            {
-                return self::WRONG_RCPT;
-            }
-            if (!$this->send($smtp, 'DATA', 354))
-            {
-                return self::DATA_FAILED;
-            }
+                $this->send('MAIL FROM: ' . $this->config['sender']/* . ''*/, 250);
+                $this->send('RCPT TO: ' . str_replace(' ', '\\ ', $to), 250);
+                $this->send('DATA', 354);
 
-            $this->send($smtp, 'Subject: ' . $subject, 0);
-            $this->send($smtp, 'To: ' . $to, 0);
-            $this->send($smtp, 'From: ' . $from, 0);
-            if (is_array($headers))
-            {
-                $this->send($smtp, implode("\r\n", $headers), 0);
+                $this->send('Subject: ' . $subject);
+                $this->send('To: ' . $to);
+                $this->send('From: ' . $from);
+                $this->send(implode("\r\n", $headers));
+                
+                $this->send("\r\n");
+                $this->send($text);
+                $this->send('.', 250);
+                
+                $this->send('QUIT', 0);
+                $this->disconnect();
+                return Smtp::OK;
             }
-            $this->send($smtp, "\r\n", 0);
-            $this->send($smtp, $text, 0);
-
-            if (!$this->send($smtp, '.', 250))
+            catch (NetworkException $e)
             {
-                return self::COMPLETE_FAILED;
+                $this->disconnect();
+                $this->error = $e->getMessage();
+                return $e->getCode();
             }
-            $this->send($smtp, 'QUIT', 0);
-            fclose($smtp);
-            return self::OK;
+            catch (Exception $e)
+            {
+                $this->disconnect();
+                $this->error = $e->getMessage();
+                return Smtp::UNKNOWN;
+            }
+            
+            /*
+             * The finally-structure would be useful here :/
+             */
         }
 
         /**
-         * sends $command and checks whether $successcode is equal to the returned code
+         * Sends a command and checks whether the server responds with the correct status code
          *
-         * @static
          * @access protected
-         * @param resource $handle the socket handle
          * @param string $command the command to send
          * @param int $sucesscode the code which the server returns on success
-         * @return bool true on success, false on failure
          */
-        protected function send($handle, $command, $sucesscode)
+        protected function send($command, $sucesscode = 0)
         {
-            fputs($handle, $command . "\r\n");
-            if ($sucesscode)
+            if (@fwrite($this->connection, $command . "\r\n") === false)
             {
-                $response = $this->receive($handle);
-                if ($this->parse($response, $sucesscode))
-                {
-                    return true;
-                }
-                else
-                {
-                    fclose($handle);
-                    return false;
-                }
+                throw new NetworkException('Failed to send the command "' . $command . '" !', Smtp::SEND_FAILURE);
+            }
+            if ($sucesscode !== 0)
+            {
+                $response = $this->receive();
+                $this->parseResponse($response, $sucesscode);
             }
         }
 
         /**
          * receives data from the SMTP server
          *
-         * @static
          * @access protected
-         * @param resource $handle the socket handle
          * @return string the received data as a trimed string
          */
-        protected function receive(&$handle)
+        protected function receive()
         {
             $response = '';
-            while($tmp = trim(fgets($handle, 513)))
+            while(($tmp = trim(@fgets($this->connection, 513))))
             {
                 $response .= $tmp;
                 if (mb_substr($tmp, 3, 1) == ' ')
@@ -210,48 +227,42 @@
                     break;
                 }
             }
+            
             return trim($response);
         }
 
         /**
-         * parses $response and checks the $code
+         * Parses the response and checks if the response contains the given status code
          *
-         * @static
          * @access protected
          * @param string $response the response data
          * @param code $code the needed code
-         * @return bool true if the code matches, otherwise false
          */
-        protected function parse($response, $code)
+        protected function parseResponse($response, $code)
         {
             $responsecode = mb_substr($response, 0, 3);
-            if (trim($responsecode) == trim($code))
+            if (trim($responsecode) != trim($code))
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                throw new NetworkException('The server responded(Response: "' . $response . '") with the wrong status code!', Smtp::INVALID_RESPONSE);
             }
         }
 
         /**
-         * a simple wrapper of smtp_mail()
+         * A wrapper of Smtp::mail()
          *
-         * @static
          * @access public
          * @param string $to the email target
          * @param string $from the sender
          * @param string $subject the email subject
          * @param string $text the content
          * @param string $charset the charset (default: UTF-8)
-         * @return int false if $to or $from are no valid email addresses, otherwise the return code of smtp_mail()
+         * @return int the return code from Smtp::mail() which indicates success (0) or failure (not 0)
          */
         public function sendmail($to, $from, $subject, $text, $charset = 'UTF-8')
         {
             if (!Text::is_email($to) || !Text::is_email($from))
             {
-                return false;
+                throw new Exception('[Smtp::sendmail] The receiver and sender addresses must both be valid email addresses!');
             }
             list($name, $host) = explode('@', $to);
             $name = ucwords(str_replace(array('_', '.', '-'), ' ', $name));
