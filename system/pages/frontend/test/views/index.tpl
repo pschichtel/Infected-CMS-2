@@ -1,4 +1,4 @@
-h1>{ModulView:title}</h1>
+<h1>{ModulView:title}</h1>
 <div>
     {Model:
     <div>
