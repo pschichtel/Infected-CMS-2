@@ -66,7 +66,7 @@
         
         public static function addSysDirectoryToMap($path)
         {
-            $path = preg_replace(array('/^(\\|\/)/', '/(\\|\/)$/'), '', $path) . DS;
+            $path = preg_replace(array('/^(\\|\/)/', '/(\\|\/)$/'), '', $path) . '/';
             
             if (!file_exists(ICMS_SYS_PATH . $path))
             {

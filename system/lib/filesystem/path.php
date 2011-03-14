@@ -1,8 +1,4 @@
 <?php
-    /**
-     * Dependencies
-     */
-    require_once ICMS_SYS_PATH . 'lib/filesystem/filesystemexception.php';
 
     /**
      *

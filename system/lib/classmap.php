@@ -1,7 +1,7 @@
 <?php
     return array(
         'AbstractController'        => 'lib/Controller/AbstractController.php',
-        'AbstractbasicController'   => 'lib/Controller/AbstractBasicController.php',
+        'AbstractBasicController'   => 'lib/Controller/AbstractBasicController.php',
         'ControllerException'       => 'lib/Controller/ControllerException.php',
         'Frontcontroller'           => 'lib/Controller/FrontController.php',
         'Database'                  => 'lib/Database/Database.php',
@@ -45,7 +45,7 @@
         'Registry'                  => 'lib/Util/Registry.php',
         'Listing'                   => 'lib/Util/Listing.php',
         'Autoloader'                => 'lib/Util/Autoloader.php',
-        'SMTP'                      => 'lib/Network/Smtp.php',
+        'Smtp'                      => 'lib/Network/Smtp.php',
         'HTTP'                      => 'lib/Network/Http.php',
         'NetworkException'          => 'lib/Network/NetworkException.php',
         'IRequest'                  => 'lib/Request/IRequest.php',

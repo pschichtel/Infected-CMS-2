@@ -23,8 +23,7 @@
 
         public function push($value)
         {
-            array_push($this->stack, $value);
-            $this->size++;
+            $this->size = array_push($this->stack, $value);
             return $this;
         }
 
@@ -49,6 +48,11 @@
         public function size()
         {
             return $this->size;
+        }
+        
+        public function isEmpty()
+        {
+            return ($this->size == 0);
         }
     }
 ?>

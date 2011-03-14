@@ -37,7 +37,7 @@
          * @param int $errline
          * @param array $errcontext
          */
-        public static function error_handler($errno, $errstr ,$errfile, $errline, $errcontext)
+        public static function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
         {
             if (error_reporting() == 0)
             {
@@ -132,6 +132,7 @@
                 default:
                     $errortype = 'unknown';
             }
+            return $errortype;
         }
 
         /**
