@@ -46,7 +46,7 @@
         'Listing'                   => 'lib/Util/Listing.php',
         'Autoloader'                => 'lib/Util/Autoloader.php',
         'Smtp'                      => 'lib/Network/Smtp.php',
-        'HTTP'                      => 'lib/Network/Http.php',
+        'Http'                      => 'lib/Network/Http.php',
         'NetworkException'          => 'lib/Network/NetworkException.php',
         'IRequest'                  => 'lib/Request/IRequest.php',
         'Request'                   => 'lib/Request/Request.php',

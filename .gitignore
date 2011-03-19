@@ -1,0 +1,4 @@
+.gitignore
+mailtext.txt
+smtptests.php
+run.cmd

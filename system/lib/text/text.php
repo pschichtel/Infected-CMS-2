@@ -3,7 +3,7 @@
     /**
      * 
      */
-    abstract class Text
+    class Text
     {
         /**
          * wraps the words in $text
@@ -11,11 +11,13 @@
          * @access public
          * @static
          * @param string $text the text to chunk words in
+         * @param string $delim the string to insert
+         * @param int $maxLen the maximum word length
          * @return string the chunked text
          */
-        public static function simpleChunk($text, $maxLen = 50)
+        public static function simpleChunk($text, $delim = ' ', $maxLen = 50)
         {
-            return preg_replace('/([\S]{' . $maxLen . '})/', '$1 ', $text);
+            return preg_replace('/([\S]{' . $maxLen . '})/', '$1' . $delim, $text);
         }
 
 
@@ -33,7 +35,7 @@
         }
 
         /**
-         * encodes $uri in a simpler way like urlencode()
+         * encodes a URI in a simpler way than urlencode()
          *
          * @access public
          * @static
@@ -91,26 +93,6 @@
         }
 
         /**
-         * works as the PHP function explode, but uses the array value also as the index
-         *
-         * @access public
-         * @static
-         * @param string $delim the string to explode on
-         * @param string $text the text to explode
-         * @return array the array with the parts of the string
-         */
-        public static function explode2assoc($delim, $text)
-        {
-            $parts = explode($delim, $text);
-            $assoc = array();
-            foreach ($parts as $part)
-            {
-                $assoc[$part] = $part;
-            }
-            return $assoc;
-        }
-
-        /**
          * an mb_-version of chunk_split()
          *
          * @access public
@@ -121,8 +103,12 @@
          * @param string $encoding the character encoding
          * @return string the chunked string
          */
-        public static function chunk_split($string, $splitIndex, $delim = ' ', $encoding = CI_CHARSET)
+        public static function chunk_split($string, $splitIndex, $delim = ' ', $encoding = null)
         {
+            if ($encoding === null)
+            {
+                $encoding = mb_internal_encoding();
+            }
             $chunks = array();
             for ($i = 0; $i < mb_strlen($string, $encoding); $i += $splitIndex)
             {
@@ -132,50 +118,65 @@
         }
 
         /**
-         * fills $string with leading and following characters until $length is reached
+         * A multibyte compatible version auf str_pad (STR_PAD_BOTH)
          *
          * @access public
          * @static
          * @param string $string the string to fill up
          * @param char $char the character to fill with
          * @param int $length the length to fill up to
+         * @param string $encoding the charset to use
          * @return string the zerofilled number as a string
          */
-        public static function fill($string, $char, $length)
+        public static function fill($string, $char, $length, $encoding = null)
         {
-            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            if ($encoding === null)
+            {
+                $encoding = mb_internal_encoding();
+            }
+            $length += strlen($string) - mb_strlen($string, $encoding);
             return str_pad($string, $length, $char[0], STR_PAD_BOTH);
         }
 
         /**
-         * fills $string with leading characters until $length is reached
+         * A multibyte compatible version auf str_pad (STR_PAD_LEFT)
          *
          * @access public
          * @static
          * @param string $string the string to fill up
          * @param char $char the character to fill with
          * @param int $length the length to fill up to
+         * @param string $encoding the charset to use
          * @return string the zerofilled number as a string
          */
-        public static function lfill($string, $char, $length)
+        public static function lfill($string, $char, $length, $encoding = null)
         {
-            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            if ($encoding === null)
+            {
+                $encoding = mb_internal_encoding();
+            }
+            $length += strlen($string) - mb_strlen($string, $encoding);
             return str_pad($string, $length, $char[0], STR_PAD_LEFT);
         }
 
         /**
-         * fills $string with following characters until $length is reached
+         * A multibyte compatible version auf str_pad (STR_PAD_RIGTH)
          *
          * @access public
          * @static
          * @param string $string the string to fill up
          * @param char $char the character to fill with
          * @param int $length the length to fill up to
+         * @param string $encoding the charset to use
          * @return string the zerofilled number as a string
          */
-        public static function rfill($string, $char, $length)
+        public static function rfill($string, $char, $length, $encoding = null)
         {
-            $length += strlen($string) - mb_strlen($string, 'UTF-8');
+            if ($encoding === null)
+            {
+                $encoding = mb_internal_encoding();
+            }
+            $length += strlen($string) - mb_strlen($string, $encoding);
             return str_pad($string, $length, $char[0], STR_PAD_RIGHT);
         }
 
@@ -197,18 +198,20 @@
          *
          * @param string $haystack the first string
          * @param string $needle the second string
-         * @param bool $strict case-sensitiv or not (default: false)
+         * @param bool $casesensitive case-sensitiv or not (default: false)
          * @return bool true if the haystack and needle are equal
          */
-        public static function equal($haystack, $needle, $strict = false)
+        public static function equal($haystack, $needle, $casesensitive = false)
         {
-            $delim = '/';
-            $regex = $delim . preg_quote($needle, $delim) . $delim;
-            if ($strict === true)
+            if ($casesensitive)
             {
-                $regex .= 'i';
+                return ($haystack == $needle);
             }
-            return preg_match($regex, $haystack);
+            else
+            {
+
+                return (strcasecmp($haystack, $needle) == 0);
+            }
         }
 
         /**
@@ -222,6 +225,9 @@
         {
             if ($chars === '')
             {
+                /**
+                 * @todo rawurlencode ?
+                 */
                 $encoded = '';
                 for ($i = 0; $i < mb_strlen($string); $i++)
                 {
@@ -248,7 +254,7 @@
          */
         public static function is_numeric($numStr)
         {
-            return (bool) preg_match('/^[0-9]+$/s', $numStr);
+            return (bool)preg_match('/^[0-9]+$/s', $numStr);
         }
 
         /**
@@ -259,6 +265,10 @@
          */
         public static function rand($length)
         {
+            //static $charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=!"§$%&/()?\\-.,;:_#\'+*~<>|{}[]µ@';
+            /**
+             * @todo zeichensatz überprüfen
+             */
             $string = '';
             for ($i = 0; $i < $length; $i++)
             {

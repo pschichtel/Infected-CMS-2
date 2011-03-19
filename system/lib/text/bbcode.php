@@ -18,10 +18,6 @@
          */
         public function __construct($bbcodes, $smileys = array(), $lang = array())
         {
-            if (!is_array($bbcodes) || !is_array($smileys))
-            {
-                throw new Exception('BBCode::__construct: the bbcodes and smileys have to be passed as arrays!');
-            }
             $this->bbcodes = $bbcodes;
             $this->smileys = $smileys;
             $this->lang = $lang;
@@ -66,7 +62,7 @@
          * @param bool $html true to allow HTML
          * @return string the parsed string
          */
-        public function parse($text, $chunk = true, $bbcode = true, $smiles = true, $disallowedBBCodes = array(), $html = false)
+        public function parse($text, $chunk = true, $bbcode = true, $smiles = true, array $disallowedBBCodes = array(), $html = false)
         {
             $parser = new StringParser_BBCode();
             $parser->setGlobalCaseSensitive(false);
@@ -146,13 +142,13 @@
         }
         
         /**
-         * replaces the smiles in $text
+         * replaces the smiles in the given text
          *
          * @access public
          * @param string $text the text to parse smilies in
          * @return string the parsed text
          */
-        public function smilies($text, $smileys = array())
+        public function smileys($text, array $smileys = array())
         {
             if (count($smileys) == 0)
             {
