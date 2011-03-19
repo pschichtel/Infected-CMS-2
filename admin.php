@@ -12,7 +12,7 @@
 
     $http->setTarget($target);
     $http->setMethod(new GetRequestMethod());
-    $http->addHeader(new HttpHeader('Connection', 'close'));
+    //$http->addHeader(new HttpHeader('Connection', 'close'));
 
     $http->executeRequest();
 
