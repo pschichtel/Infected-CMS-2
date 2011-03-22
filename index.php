@@ -2,10 +2,7 @@
     define('ENCODING', 'UTF8');
     header('Content-type: text/html;charset=' . ENCODING);
     mb_internal_encoding(ENCODING);
-
-
-    //$string = 'äöüÄÖÜß';
-    //echo "String: '$string'\nLength: " . mb_strlen($string);
+    
     error_reporting(-1);
     ini_set('display_errors', true);
     define('ICMS_APP_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
@@ -59,7 +56,7 @@
         echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
     
-    var_dump(Loader::getClassMap());
+    //var_dump(Loader::getClassMap());
 
     echo '</pre>';
 

@@ -236,12 +236,12 @@
          *
          * @access protected
          * @param string $response the response data
-         * @param code $code the needed code
+         * @param int $code the needed code
          */
         protected function parseResponse($response, $code)
         {
             $responsecode = mb_substr($response, 0, 3);
-            if (trim($responsecode) != trim($code))
+            if (trim($responsecode) != strval($code))
             {
                 throw new NetworkException('The server responded(Response: "' . $response . '") with the wrong status code!', Smtp::INVALID_RESPONSE);
             }
