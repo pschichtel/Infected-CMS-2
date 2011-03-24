@@ -28,7 +28,7 @@
             return $this;
         }
 
-        public function select_from($table, $fields = null)
+        public function select_from($table, array $fields = null)
         {
             if (is_null($fields))
             {
@@ -50,7 +50,7 @@
             return $this;
         }
 
-        public function update($table, $fields, $data)
+        public function update($table, array $fields, array $data)
         {
             $limit = min(count($fields), count($data));
             $data = array_map(array($this, 'escape'), $data);
@@ -77,9 +77,10 @@
             return $this;
         }
 
-        public function custom($command)
+        public function custom($command, $expectsResult = false)
         {
             $this->query .= $command . ' ';
+            $this->expectsResult = ($expectsResult ? true : false);
             return $this;
         }
 

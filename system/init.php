@@ -6,8 +6,8 @@
     Loader::registerAutoloader();
     Loader::addClassMap();
 
-    Registry::set('tpl.design_path', ICMS_SYS_PATH . 'designs/');
-    Registry::set('log_path',        ICMS_SYS_PATH . 'logs/frontend/');
-    Registry::set('language_path',   ICMS_SYS_PATH . 'language/frontend/');
+    Registry::set('tpl.design_path',    ICMS_SYS_PATH . 'designs/');
+    Registry::set('log_path',           ICMS_SYS_PATH . 'logs/frontend/');
+    Registry::set('language_path',      ICMS_SYS_PATH . 'language/frontend/');
 
 ?>

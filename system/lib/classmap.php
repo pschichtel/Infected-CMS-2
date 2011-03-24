@@ -73,17 +73,17 @@
         'EmailValidator'                    => 'lib/Validators/EmailValidator.php',
         'AbstractViewHelper'                => 'lib/View/AbstractViewHelper.php',
         'Design'                            => 'lib/View/Design.php',
-        'Template'                          => 'lib/View/Template.php',
         'ViewException'                     => 'lib/View/ViewException.php',
-        'TemplateParser'                    => 'lib/View/TemplateEngine/templateparser.php',
-        'ITag'                              => 'lib/View/TemplateEngine/ITag.php',
-        'NodeList'                          => 'lib/View/TemplateEngine/Nodes/NodeList.php',
-        'Node'                              => 'lib/View/TemplateEngine/Nodes/Nodes.php',
-        'RootNode'                          => 'lib/View/TemplateEngine/Nodes/Nodes.php',
-        'SingleNode'                        => 'lib/View/TemplateEngine/Nodes/Nodes.php',
-        'TextNode'                          => 'lib/View/TemplateEngine/Nodes/Nodes.php',
-        'HeadViewHelper'                    => 'lib/View/ViewHelper/HeadviewHelper.php',
-        'MenuViewHelper'                    => 'lib/View/ViewHelper/MenuviewHelper.php',
-        'PagebrowserViewHelper'             => 'lib/View/ViewHelper/PagebrowserViewHelper.php'
+        'Template'                          => 'lib/View/Template.php'
+     // 'TemplateParser'                    => 'lib/View/TemplateEngine/templateparser.php',
+     // 'ITag'                              => 'lib/View/TemplateEngine/ITag.php',
+     // 'NodeList'                          => 'lib/View/TemplateEngine/Nodes/NodeList.php',
+     // 'Node'                              => 'lib/View/TemplateEngine/Nodes/Nodes.php',
+     // 'RootNode'                          => 'lib/View/TemplateEngine/Nodes/Nodes.php',
+     // 'SingleNode'                        => 'lib/View/TemplateEngine/Nodes/Nodes.php',
+     // 'TextNode'                          => 'lib/View/TemplateEngine/Nodes/Nodes.php',
+     // 'HeadViewHelper'                    => 'lib/View/ViewHelper/HeadviewHelper.php',
+     // 'MenuViewHelper'                    => 'lib/View/ViewHelper/MenuviewHelper.php',
+     // 'PagebrowserViewHelper'             => 'lib/View/ViewHelper/PagebrowserViewHelper.php'
     );
 ?>

@@ -60,19 +60,19 @@
         {
             if (!$this->connected)
             {
-                $this->dbhandle = mysql_connect($this->host, $this->user, $this->pass);
+                $this->dbhandle = @mysql_connect($this->host, $this->user, $this->pass);
                 if (!is_resource($this->dbhandle))
                 {
                     throw new DatabaseException('Connection to the database failed!', 501);
                 }
-                if (!mysql_select_db($this->dbname, $this->dbhandle))
+                if (!@mysql_select_db($this->dbname, $this->dbhandle))
                 {
                     throw new DatabaseException('Database selection failed!', 502);
                 }
                 $this->connected = true;
                 if (!is_null($this->charset))
                 {
-                    mysql_set_charset($this->charset, $this->dbhandle);
+                    @mysql_set_charset($this->charset, $this->dbhandle);
                 }
             }
         }
@@ -95,7 +95,7 @@
         public function query(IDatabaseQuery $query)
         {
             $this->connect();
-            $result = mysql_query($query->getQuery(), $this->dbhandle);
+            $result = @mysql_query($query->getQuery(), $this->dbhandle);
             if (!is_resource($result) && $query->expectsResult())
             {
                 throw new DatabaseException('query failed!', 503);
@@ -113,7 +113,7 @@
         public function unbufferedQuery(IDatabaseQuery $query)
         {
             $this->connect();
-            $result = mysql_unbuffered_query($query, $this->dbhandle);
+            $result = @mysql_unbuffered_query($query, $this->dbhandle);
             if (!is_resource($result))
             {
                 throw new DatabaseException('query failed!', 503);
@@ -123,12 +123,12 @@
 
         public function lastError()
         {
-            return mysql_error($this->dbhandle);
+            return @mysql_error($this->dbhandle);
         }
 
         public function lastInsertedRowid()
         {
-            return mysql_insert_id($this->dbhandle);
+            return @mysql_insert_id($this->dbhandle);
         }
     }
 
