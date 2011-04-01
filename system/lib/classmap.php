@@ -71,10 +71,12 @@
         'Textile'                           => 'lib/Text/textile/textile.php',
         'IValidator'                        => 'lib/Validators/IValidator.php',
         'EmailValidator'                    => 'lib/Validators/EmailValidator.php',
-        'AbstractViewHelper'                => 'lib/View/AbstractViewHelper.php',
-        'Design'                            => 'lib/View/Design.php',
         'ViewException'                     => 'lib/View/ViewException.php',
-        'Template'                          => 'lib/View/Template.php'
+        'Design'                            => 'lib/View/Design.php',
+        'Template'                          => 'lib/View/Template.php',
+        'IView'                             => 'lib/View/IView.php',
+        'IFilter'                           => 'lib/View/IFilter.php'
+     // 'AbstractViewHelper'                => 'lib/View/AbstractViewHelper.php',
      // 'TemplateParser'                    => 'lib/View/TemplateEngine/templateparser.php',
      // 'ITag'                              => 'lib/View/TemplateEngine/ITag.php',
      // 'NodeList'                          => 'lib/View/TemplateEngine/Nodes/NodeList.php',

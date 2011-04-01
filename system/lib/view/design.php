@@ -1,49 +1,37 @@
 <?php
-    /**
-     * 
-     */
     class Design extends Template
     {
-        private static $designName = '';
-
-        private $activeDesign;
-
-        public function __construct()
+        protected $title;
+        protected static $minorTitles = array();
+    
+        public function __construct($title)
         {
-            $this->session = Session::instance();
-            $this->config = Config::instance();
-            $this->request = Request::instance();
-            
-            $this->activeDesign = $this->getActiveDesign();
-            self::$designName = $this->activeDesign;
-            $this->config = new INIConfigFile(Registry::get('tpl.design_path') . $this->activeDesign . '/design.ini');
-
-            parent::__construct('index.tpl');
+            $this->title = $title;
+            parent::__construct('index/index');
+            $this->addSubtemplate('header', new Template('index/header'));
+            $this->addSubtemplate('footer', new Template('index/footer'));
         }
         
-        public function  __destruct()
-        {}
-
-        private function getActiveDesign()
+        public static function addMinorTitle($title)
         {
-            if ($this->request->exists('get', 'design'))
-            {
-                return $this->request->get('get', 'design');
-            }
-            elseif ($this->session->exists('design'))
-            {
-                return $this->session->get('design');
-            }
-            else
-            {
-                return $this->config->get('core', 'design');
-            }
+            self::$minorTitles[] = $title;
         }
-
-        public static function name()
+        
+        public static function clearMinorTitles()
         {
-            return self::$designName;
+            self::$minorTitles = array();
         }
-
+        
+        public function render()
+        {
+            $this->addVar('title', $this->title);
+            $this->addVar('minorTitles', self::$minorTitles);
+            return parent::render();
+        }
+        
+        public function setContentTpl(Template $tpl)
+        {
+            $this->addSubtemplate('content', $tpl);
+        }
     }
 ?>

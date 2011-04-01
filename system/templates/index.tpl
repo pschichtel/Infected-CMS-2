@@ -1,28 +1,21 @@
+<!DOCTYPE html>
 <html>
     <head>
-{ForEach<data>}
-
-<script>blubber{VARIABLE}</script>
-{/ForEach}
-        <title>{ViewHelper<head>:title}</title>
+        <title><?php echo $title ?></title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     </head>
     <body>
         <div id="maincontainer">
             <div id="colcontainer">
-                <div id="">
+                <div id="col_right">
                     <div id="content">
-                        {SubTemplate<content>}
+                        <?php $this->subTemplate('content') ?>
                     </div>
                 </div>
+                <div id="col_levt">
+                    <div></div>
+                </div>
             </div>
-            {ForEach<test>}
-                lol :{
-                {If<cond>}
-                    {ForEach<test2>}
-                        rekursion :S
-                    {/ForEach}
-                {/If}
-            {/ForEach}
         </div>
     </body>
 </html>
