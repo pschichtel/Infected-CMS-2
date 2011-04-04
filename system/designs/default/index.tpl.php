@@ -1,36 +1,32 @@
-{ViewHelper<head>:dtd}
+<?php echo $meta['dtd'] ?>
 <html>
     <head>
-        <title>{ViewHelper<head>:title}</title>
-        {ViewHelper<head>:style}
-        {ViewHelper<head>:meta}
-        {ViewHelper<head>:script}
+        <title><?php echo $meta['title'] ?></title>
+        <?php echo $meta['style'] ?>
+        <?php echo $meta['metatags'] ?>
+        <?php echo $meta['script'] ?>
     </head>
     <body>
         <div id="maincontainer">
             <div id="header">
-                {SubTemplate<header>}
+                <?php $this->subTemplate('header') ?>
             </div>
             <div id="colcontainer">
                 <div id="menu">
-                    {ViewHelper<menu>:menu}
+                    <?php $this->widget('menu') ?>
                 </div>
                 <div id="">
                     <div id="breadcrumb">
-                        {ViewHelper<menu>:breadcrumb}
+                        <?php $this->widget('breadcrumb') ?>
                     </div>
                     <div id="content">
-                        {SubTemplate<content>}
+                        <?php $this->subTemplate('content') ?>
                     </div>
                 </div>
             </div>
             <div id="footer">
-                {SubTemplate<footer>}
+                <?php $this->subTemplate('footer') ?>
             </div>
-            {Model<test>}
-                lol :{
-
-            {/Model}
         </div>
     </body>
 </html>

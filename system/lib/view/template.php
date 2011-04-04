@@ -2,6 +2,8 @@
 
     class Template implements IView
     {
+        protected static $tplPaths = array();
+        
         protected $file;
         protected $vars;
         protected $subtemplates;
@@ -15,13 +17,17 @@
             {
                 $tplpath =& $file;
             }
-            elseif (is_readable(iQUIZ_ROOT . DS . 'templates' . DS . $file . '.tpl.php'))
-            {
-                $tplpath = iQUIZ_ROOT . DS . 'templates' . DS . $file . '.tpl.php';
-            }
             else
             {
-                throw new Exception('Template file not found or not readable!');
+                $tpl = $this->findTemplate($file);
+                if ($tpl)
+                {
+                    $tplpath = $tpl;
+                }
+                else
+                {
+                    throw new Exception('Template file not found or not readable!');
+                }
             }
             $this->file = $tplpath;
             
@@ -29,6 +35,54 @@
             $this->subtemplates = array();
             $this->postFilters = array();
             $this->views = array();
+        }
+
+        public static function addTemplatePath($path)
+        {
+            $path = rtrim($path, '/\\');
+            if (!in_array($path, self::$tplPaths))
+            {
+                self::$tplPaths[] = $path;
+                return true;
+            }
+            return false;
+        }
+
+        public static function getTemplatePaths($reversed = true)
+        {
+            if ($reversed)
+            {
+                return array_reverse(self::$tplPaths);
+            }
+            else
+            {
+                return self::$tplPaths;
+            }
+        }
+
+        protected function findTemplate($template)
+        {
+            $template = ltrim($template, '/\\');
+
+            if (Registry::exists('template_path'))
+            {
+                $tmp = Registry::get('template_path') . Design::name() . '/' . $template . '.tpl.php';
+                if (file_exists($tmp))
+                {
+                    return $tmp;
+                }
+            }
+            
+            foreach (self::getTemplatePaths() as $tplPath)
+            {
+                $tmp = $tplPath . '/' . $template;
+                if (is_readable($tmp))
+                {
+                    return $tmp;
+                }
+            }
+            
+            return false;
         }
         
         public function __destruct()
