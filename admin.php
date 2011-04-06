@@ -9,15 +9,16 @@
     $http = new Http();
     $http->setDebug(true);
     
-
+    $target = 'http://server.code-infection.de/page/mcactivate.php';
     $http->setTarget($target);
-    $http->setMethod(new GetRequestMethod());
+    $http->setMethod(new PostRequestMethod());
+    $http->setRequestBody($http->preparePostData(array('key' => '55e-5a0')));
     //$http->addHeader(new HttpHeader('Connection', 'close'));
 
     $http->executeRequest();
 
     //echo htmlspecialchars($http->getResponseBody());
-    echo $http->getResponseBody();
+    echo '>' . $http->getResponseBody() . '<';
 
 
 ?></pre>

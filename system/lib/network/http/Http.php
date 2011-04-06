@@ -1152,7 +1152,7 @@
                         stream_set_blocking($this->connection, 0);
                     }
 
-                    $this->responseBody = stream_get_contents($this->connection, $this->responseHeaders['content-length']);
+                    $this->responseBody = stream_get_contents($this->connection, intval($this->responseHeaders['content-length']->value));
                 }
                 elseif (isset($this->responseHeaders['transfer-encoding']) && strcasecmp ($this->responseHeaders['transfer-encoding']->value, 'chunked') === 0)
                 {
