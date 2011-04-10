@@ -1,4 +1,6 @@
 <?php
+    Loader::addSysDirectoryToMap('lib/View/Filters');
+
     class Design extends Template
     {
         protected $title;
@@ -8,6 +10,7 @@
         {
             $this->title = $title;
             parent::__construct('index/index');
+            $this->addPostFilter(new WhitespaceFilter());
             $this->addSubtemplate('header', new Template('index/header'));
             $this->addSubtemplate('footer', new Template('index/footer'));
         }
