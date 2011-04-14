@@ -2,23 +2,23 @@
     /**
      *
      */
-    class ConfigFile implements IConfigFile
+    class SerializedConfigFile implements IConfigFile
     {
         public static $configs = array();
-        private $activConfig;
-        private $filepath;
+        protected $activConfig;
+        protected $filepath;
 
         public function __construct($filepath)
         {
             $this->filepath = $filepath;
-            $this->activConfig = $this->load($filepath);
+            $this->activConfig = $this->load();
         }
 
-        public function load()
+        public function load($reload = false)
         {
-            if (!isset(self::$configs[$this->filepath]))
+            if (!isset(self::$configs[$this->filepath]) || $reload)
             {
-                if (!file_exists($this->filepath))
+                if (!is_readable($this->filepath))
                 {
                     return array();
                 }

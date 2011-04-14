@@ -19,7 +19,7 @@
         'EventManager'                      => 'lib/Event/EventManager.php',
         'IEventHandler'                     => 'lib/Event/IEventhandler.php',
         'FileSystemException'               => 'lib/Filesystem/FileSystemException.php',
-        'ConfigFile'                        => 'lib/Filesystem/ConfigFile/ConfigFile.php',
+        'SerializedConfigFile'                        => 'lib/Filesystem/ConfigFile/SerializedConfigFile.php',
         'ConfigFileException'               => 'lib/Filesystem/ConfigFile/ConfigFileException.php',
         'EncryptedConfigFile'               => 'lib/Filesystem/ConfigFile/EncryptedConfigFile.php',
         'IConfigFile'                       => 'lib/Filesystem/ConfigFile/IConfigFile.php',
