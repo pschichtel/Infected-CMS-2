@@ -45,7 +45,7 @@
         {
             if (!$this->validateConfig($config))
             {
-                throw new NetworkException('[Smtp::__construct] The given configuration array does not contain the needed keys!');
+                throw new NetworkException('The given configuration array does not contain the needed keys!');
             }
             $this->config = $config;
             $this->connection = null;
@@ -262,7 +262,7 @@
         {
             if (!Text::is_email($to) || !Text::is_email($from))
             {
-                throw new Exception('[Smtp::sendmail] The receiver and sender addresses must both be valid email addresses!');
+                throw new Exception('The receiver and sender addresses must both be valid email addresses!');
             }
             list($name, $host) = explode('@', $to);
             $name = ucwords(str_replace(array('_', '.', '-'), ' ', $name));

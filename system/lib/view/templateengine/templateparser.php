@@ -132,7 +132,7 @@
                     echo "close\n";
                     if ($tagStack->size() == 0)
                     {
-                        throw new ViewException('[TemplateParser::parse] There was no open-tag for this close-tag: "{/' . $tag['name'] . '}"!', 401);
+                        throw new ViewException('There was no open-tag for this close-tag: "{/' . $tag['name'] . '}"!', 401);
                     }
                     if ($tagStack->top() == $tag['name'])
                     {
@@ -144,7 +144,7 @@
             }
             if ($tagStack->size() > 0)
             {
-                throw new ViewException('[TemplateParser::parse] There are unclosed tags!', 401);
+                throw new ViewException('There are unclosed tags!', 401);
             }
 
             $text = $this->stripWhitespace(substr($tpl, $lastPos));

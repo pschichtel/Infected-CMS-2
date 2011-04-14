@@ -67,7 +67,7 @@
             if (Registry::exists('template.path'))
             {
                 $tmp = Registry::get('template.path') . Design::name() . '/' . $template . '.tpl.php';
-                if (file_exists($tmp))
+                if (is_readable($tmp))
                 {
                     return $tmp;
                 }
@@ -176,7 +176,7 @@
         
         protected function displayTemplateFile($tplpath)
         {
-            echo $this->renderTemplateFile($tplPath);
+            echo $this->renderTemplateFile($tplpath);
         }
         
         public function addSubtemplate($name, Template $tpl)

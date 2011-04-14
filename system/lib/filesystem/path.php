@@ -12,11 +12,11 @@
             $path = preg_replace('/^[a-z]:/i', '', trim($path));
             if ($mustexist && !file_exists($path))
             {
-                throw new FileSystemException('[Path::__construct] path was not found!', 404);
+                throw new FileSystemException('Path was not found!', 404);
             }
             if (!$allowrelativpaths && !preg_match('/^(\\|\/)/', $path))
             {
-                throw new FileSystemException('[Path::__construct] path was not found!', 401);
+                throw new FileSystemException('Path was not found!', 401);
             }
         }
         

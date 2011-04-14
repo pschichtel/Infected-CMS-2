@@ -43,7 +43,7 @@
             }
             else
             {
-                throw new ModelException('[Config::__construct] No database object found!', 401);
+                throw new ModelException('No database object found!', 401);
             }
             //$this->log = new Log('config');
             $this->fetch('core');
