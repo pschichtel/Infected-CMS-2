@@ -5,6 +5,6 @@
     interface IConfigFile extends IConfig
     {
         public function save();
-        public function load();
+        public function load($reload = false);
     }
 ?>

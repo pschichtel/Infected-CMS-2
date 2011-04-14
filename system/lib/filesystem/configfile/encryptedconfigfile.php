@@ -5,9 +5,9 @@
     class EncryptedConfigFile implements IConfigFile
     {
         public static $configs = array();
-        private $activConfig;
-        private $crypter;
-        private $filepath;
+        protected $activConfig;
+        protected $crypter;
+        protected $filepath;
         protected $privatekey;
 
         public function __construct($filepath, $privatekey)
@@ -17,13 +17,13 @@
             list($this->activConfig, $this->crypter) = $this->load();
         }
 
-        public function load()
+        public function load($reload = false)
         {
-            if (!isset(self::$configs[$this->filepath]))
+            if (!isset(self::$configs[$this->filepath]) || $reload)
             {
                 $crypter = new AESCrypter($this->privatekey, 1);
 
-                if (!file_exists($this->filepath))
+                if (!is_readable($this->filepath))
                 {
                     return array(array(), $crypter);
                 }

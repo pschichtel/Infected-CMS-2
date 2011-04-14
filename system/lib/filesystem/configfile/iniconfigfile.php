@@ -5,22 +5,22 @@
     class INIConfigFile implements IConfigFile
     {
         public static $configs = array();
-        private $filepath;
-        private $activConfig;
-        private static $reservedKeywords = array('null', 'yes', 'no', 'true', 'false', 'on', 'off', 'none');
+        protected $filepath;
+        protected $activConfig;
+        protected static $reservedKeywords = array('null', 'yes', 'no', 'true', 'false', 'on', 'off', 'none');
         
-        public function __construct($filepath)
+        public function __construct($filepath, $suffix = '.php')
         {
-            $filepath .= '.php';
+            $filepath .= $suffix;
             $this->filepath = $filepath;
-            $this->activConfig = $this->load($filepath);
+            $this->activConfig = $this->load();
         }
 
-        public function load()
+        public function load($reload = false)
         {
-            if (!isset(self::$configs[$this->filepath]))
+            if (!isset(self::$configs[$this->filepath]) || $reload)
             {
-                if (!file_exists($this->filepath))
+                if (!is_readable($this->filepath))
                 {
                     return array();
                 }
@@ -28,7 +28,7 @@
                 $tmp = parse_ini_file($this->filepath);
                 if ($tmp === false || !is_array($tmp))
                 {
-                    throw new ConfigException('[Configuration::load] A invalid config file was given or the given private key was invalid', 402);
+                    throw new ConfigException('A invalid config file was given or the given private key was invalid', 402);
                 }
                 return $tmp;
             }
@@ -68,15 +68,13 @@
                 {
                     continue;
                 }
-                if (is_array($value))
+                elseif (is_array($value))
                 {
                     $tmp .= $this->array2ini($name, $value);
                 }
                 else
                 {
-                    $index = strval($index);
-                    $value = strval($value);
-                    $tmp .= "$index=$value\n";
+                    $tmp .= strval($index) . '=' . strval($value) . "\n";
                 }
             }
             file_put_contents($this->filepath, $tmp);
