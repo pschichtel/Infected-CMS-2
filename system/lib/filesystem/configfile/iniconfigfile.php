@@ -16,16 +16,16 @@
             $this->activConfig = $this->load($filepath);
         }
 
-        public function load($filepath)
+        public function load()
         {
-            if (!isset(self::$configs[$filepath]))
+            if (!isset(self::$configs[$this->filepath]))
             {
-                if (!file_exists($filepath))
+                if (!file_exists($this->filepath))
                 {
                     return array();
                 }
 
-                $tmp = parse_ini_file($filepath);
+                $tmp = parse_ini_file($this->filepath);
                 if ($tmp === false || !is_array($tmp))
                 {
                     throw new ConfigException('[Configuration::load] A invalid config file was given or the given private key was invalid', 402);
@@ -34,11 +34,11 @@
             }
             else
             {
-                return self::$configs[$filepath];
+                return self::$configs[$this->filepath];
             }
         }
 
-        private function array2ini($name, array $array)
+        protected function array2ini($name, array $array)
         {
             $name = strval($name);
             $tmp = '';
@@ -58,7 +58,7 @@
         {
             if (!is_writable($this->filepath))
             {
-                //throw new ConfigException('[Configuration::save] The config file is not writable!', 403);
+                throw new ConfigException('The config file is not writable!', 403);
             }
 
             $tmp = ";<?php __halt_compiler() ?>\n";
@@ -82,7 +82,7 @@
             file_put_contents($this->filepath, $tmp);
         }
 
-        public function get($name)
+        public function get($name, $default = null)
         {
             if ($this->exists($name))
             {
@@ -90,7 +90,7 @@
             }
             else
             {
-                return null;
+                return $default;
             }
         }
 

@@ -15,7 +15,8 @@
     $config = new INIConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
     //$config = new ConfigFile(ICMS_SYS_PATH . 'configs/database.conf');
     $config->set('charset', ENCODING);
-    Registry::set('database',       Database::factorFromConfig($config));
+    Registry::set('database',       new PDOConnection($config));
+    //Registry::set('database',       Database::factorFromConfig($config));
     //Registry::set('database',       Database::factory('mysql://root@localhost/test?ci-0001_#utf8'));
 
     Session::name('sessID');
@@ -53,7 +54,7 @@
     }
     catch (Exception $e)
     {
-        echo "EXCEPTION !!!!\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
+        echo get_class($e) . ":\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
     }
     
     //var_dump(Loader::getClassMap());

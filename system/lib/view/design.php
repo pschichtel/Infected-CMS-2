@@ -10,7 +10,7 @@
         {
             $this->title = $title;
             parent::__construct('index/index');
-            $this->addPostFilter(new WhitespaceFilter());
+            //$this->addPostFilter(new WhitespaceFilter());
             $this->addSubtemplate('header', new Template('index/header'));
             $this->addSubtemplate('footer', new Template('index/footer'));
         }

@@ -26,8 +26,9 @@
         {
             echo "ich bin die datenbank-testaktion!\n\n";
             $db = Registry::get('database');
-            $result = $db->query($db->QueryBuilder()->select_from('test'));
-            var_dump($result->fetchAll());
+            $statement = $db->query('SHOW TABLES');
+            $result = $statement->execute();
+            var_dump($result);
         }
 
         public function action_session()

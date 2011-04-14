@@ -26,7 +26,7 @@
                 }
                 else
                 {
-                    throw new Exception('Template file not found or not readable!');
+                    throw new ViewException('Template file not found or not readable!');
                 }
             }
             $this->file = $tplpath;
@@ -64,9 +64,9 @@
         {
             $template = ltrim($template, '/\\');
 
-            if (Registry::exists('template_path'))
+            if (Registry::exists('template.path'))
             {
-                $tmp = Registry::get('template_path') . Design::name() . '/' . $template . '.tpl.php';
+                $tmp = Registry::get('template.path') . Design::name() . '/' . $template . '.tpl.php';
                 if (file_exists($tmp))
                 {
                     return $tmp;

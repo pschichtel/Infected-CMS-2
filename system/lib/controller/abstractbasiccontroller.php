@@ -10,10 +10,9 @@
         
         public function  __construct(IRequest $request, Response $response)
         {
-            $this->design = new Design();
+            $this->design = new Design('TEST');
             $this->db = Registry::get('database');
             $this->session =& Session::instance();
-            return;
         }
     }
 ?>

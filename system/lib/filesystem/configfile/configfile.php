@@ -14,31 +14,31 @@
             $this->activConfig = $this->load($filepath);
         }
 
-        private function load($filepath)
+        public function load()
         {
-            if (!isset(self::$configs[$filepath]))
+            if (!isset(self::$configs[$this->filepath]))
             {
-                if (!file_exists($filepath))
+                if (!file_exists($this->filepath))
                 {
                     return array();
                 }
 
-                $tmp = @file_get_contents($filepath);
+                $tmp = @file_get_contents($this->filepath);
                 if ($tmp === false)
                 {
-                    throw new ConfigException('[Configuration::load] The config file exists, but could not be loaded!', 401);
+                    throw new ConfigException('The config file exists, but could not be loaded!', 401);
                 }
                 
                 $tmp = @unserialize($tmp);
                 if ($tmp === false || !is_array($tmp))
                 {
-                    throw new ConfigException('[Configuration::load] A invalid config file was given!', 402);
+                    throw new ConfigException('A invalid config file was given!', 402);
                 }
                 return $tmp;
             }
             else
             {
-                return self::$configs[$filepath];
+                return self::$configs[$this->filepath];
             }
         }
 
@@ -46,14 +46,14 @@
         {
             if (!is_writable($this->filepath))
             {
-                //throw new ConfigException('[Configuration::save] The config file is not writable!', 403);
+                throw new ConfigException('The config file is not writable!', 403);
             }
 
             $tmp = serialize($this->activConfig);
             file_put_contents($this->filepath, $tmp);
         }
 
-        public function get($name)
+        public function get($name, $default = null)
         {
             if ($this->exists($name))
             {
@@ -61,7 +61,7 @@
             }
             else
             {
-                return null;
+                return $default;
             }
         }
 

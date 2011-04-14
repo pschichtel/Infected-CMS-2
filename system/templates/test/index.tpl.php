@@ -8,5 +8,5 @@
         </div>
         <div><?php echo $row['author'] ?></div>
     </div>
-    <?php endif ?>
+    <?php endforeach ?>
 </div>
