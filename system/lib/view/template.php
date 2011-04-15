@@ -3,8 +3,10 @@
     class Template implements IView
     {
         protected static $tplPaths = array();
+        protected static $fileExtention = '';
         
         protected $file;
+        
         protected $vars;
         protected $subtemplates;
         protected $postFilters;
@@ -59,14 +61,24 @@
                 return self::$tplPaths;
             }
         }
+        
+        public static function setFileExtention($ext)
+        {
+            self::$fileExtention = strval($ext);
+        }
+        
+        public static function getFileExtention()
+        {
+            return self::$fileExtention;
+        }
 
         protected function findTemplate($template)
         {
             $template = ltrim($template, '/\\');
 
-            if (Registry::exists('template.path'))
+            if (Registry::exists('paths.designs'))
             {
-                $tmp = Registry::get('template.path') . Design::name() . '/' . $template . '.tpl.php';
+                $tmp = Registry::get('paths.designs') . Design::name() . '/' . $template . self::$fileExtention;
                 if (is_readable($tmp))
                 {
                     return $tmp;
@@ -75,7 +87,7 @@
             
             foreach (self::getTemplatePaths() as $tplPath)
             {
-                $tmp = $tplPath . '/' . $template;
+                $tmp = $tplPath . '/' . $template . self::$fileExtention;
                 if (is_readable($tmp))
                 {
                     return $tmp;

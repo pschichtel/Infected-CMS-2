@@ -5,14 +5,19 @@
     {
         protected $title;
         protected static $minorTitles = array();
-    
-        public function __construct($title)
+        
+        public static function name()
         {
-            $this->title = $title;
-            parent::__construct('index/index');
+            return 'TEST';
+        }
+    
+        public function __construct()
+        {
+            $this->title = '';
+            parent::__construct('index');
             //$this->addPostFilter(new WhitespaceFilter());
-            $this->addSubtemplate('header', new Template('index/header'));
-            $this->addSubtemplate('footer', new Template('index/footer'));
+            //$this->addSubtemplate('header', new Template('index/header'));
+            //$this->addSubtemplate('footer', new Template('index/footer'));
         }
         
         public static function addMinorTitle($title)
@@ -25,6 +30,16 @@
             self::$minorTitles = array();
         }
         
+        public function setTitle($title)
+        {
+            $this->title = strval($title);
+        }
+        
+        public function getTitle()
+        {
+            return $this->title;
+        }
+        
         public function render()
         {
             $this->addVar('title', $this->title);
@@ -35,6 +50,11 @@
         public function setContentTpl(Template $tpl)
         {
             $this->addSubtemplate('content', $tpl);
+        }
+        
+        protected function subTemplate($tpl)
+        {
+            $this->displaySubtemplate($tpl);
         }
     }
 ?>

@@ -1,7 +1,7 @@
 <?php
     return array(
         'AbstractController'                => 'lib/Controller/AbstractController.php',
-        'AbstractBasicController'           => 'lib/Controller/AbstractBasicController.php',
+        'AbstractBasicPage'           => 'lib/Controller/AbstractBasicController.php',
         'ControllerException'               => 'lib/Controller/ControllerException.php',
         'Frontcontroller'                   => 'lib/Controller/FrontController.php',
      // 'Database'                          => 'lib/Database/Database.php',
@@ -19,7 +19,7 @@
         'EventManager'                      => 'lib/Event/EventManager.php',
         'IEventHandler'                     => 'lib/Event/IEventhandler.php',
         'FileSystemException'               => 'lib/Filesystem/FileSystemException.php',
-        'SerializedConfigFile'                        => 'lib/Filesystem/ConfigFile/SerializedConfigFile.php',
+        'SerializedConfigFile'              => 'lib/Filesystem/ConfigFile/SerializedConfigFile.php',
         'ConfigFileException'               => 'lib/Filesystem/ConfigFile/ConfigFileException.php',
         'EncryptedConfigFile'               => 'lib/Filesystem/ConfigFile/EncryptedConfigFile.php',
         'IConfigFile'                       => 'lib/Filesystem/ConfigFile/IConfigFile.php',

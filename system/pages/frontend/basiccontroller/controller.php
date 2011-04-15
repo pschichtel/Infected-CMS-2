@@ -2,7 +2,7 @@
     /**
      *
      */
-    class BasiccontrollerController extends AbstractBasicController
+    class BasiccontrollerController extends AbstractBasicPage
     {
         public function __construct(IRequest $request, Response $response)
         {
@@ -20,6 +20,24 @@
             {
                 echo 'No Session text found!';
             }
+        }
+        
+        public function action_tpl()
+        {
+            $tpl = new Template('test/index');
+            $tpl->addVar('data', array(
+                array(
+                    'title' => 'Titel 1',
+                    'text' => 'Text 1',
+                    'author' => 'Autor 1'
+                ),
+                array(
+                    'title' => 'Titel 2',
+                    'text' => 'Text 2',
+                    'author' => 'Autor 2'
+                )
+            ));
+            $this->design->setContentTpl($tpl);
         }
     }
 ?>

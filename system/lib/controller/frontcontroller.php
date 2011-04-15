@@ -49,15 +49,29 @@
             return $this->controllerPath;
         }
 
-        public function run(IRequest $request, Response $response)
+        public function run(IRequest $request, IResponse $response)
         {
             $controller = $request->getController();
             $action = 'action_' . $request->getAction();
+            $controllerPath = '';
+            
+            if (!empty($this->controllerPath))
+            {
+                $controllerPath = $this->controllerPath;
+            }
+            elseif (Registry::exists('paths.controllers'))
+            {
+                $controllerPath = rtrim(Registry::get('paths.controllers'), '/\\') . '/';
+            }
+            else
+            {
+                throw new ControllerException('No valid controller path was found!', 404);
+            }
 
-            $controllerPath = $this->controllerPath . $controller . '/controller.php';
+            $controllerPath .= $controller . '/controller.php';
             $controller = ucfirst(strtolower($controller)) . 'Controller';
 
-            if (file_exists($controllerPath))
+            if (is_readable($controllerPath))
             {
                 require_once $controllerPath;
                 if (class_exists($controller))
@@ -75,6 +89,7 @@
                             {
                                 $controller->action_index();
                             }
+                            unset($controller);
                         }
                         catch (ControllerException $e)
                         {
@@ -87,18 +102,18 @@
                     }
                     else
                     {
-                        throw new Exception("invalid controller!\ncontrollers have to extend AbstractController");
+                        throw new ControllerException("Invalid controller!\ncontrollers have to extend AbstractController");
                     }
                 }
                 else
                 {
-                    throw new Exception("controller class not found!\n$controller");
+                    throw new ControllerException("Controller class not found!\n$controller");
                 }
                 
             }
             else
             {
-                throw new Exception("controller file not found!\n$controllerPath");
+                throw new ControllerException("The controller was not found or is not readable!\n$controllerPath");
             }
         }
     }

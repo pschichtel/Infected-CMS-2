@@ -23,7 +23,7 @@
     Session::lifetime(10);
     Session::instance();
 
-    echo "<pre>";
+    //echo "<pre>";
 
     /*$config->setConfig(array(
         'adapter' => 'mysql',
@@ -38,27 +38,30 @@
     //var_dump($config->getAll());
 
     Template::addTemplatePath(ICMS_SYS_PATH . 'templates');
+    Template::setFileExtention('.tpl.php');
 
 
     try
     {
         $frontcontroller = new Frontcontroller();
-        $frontcontroller->setControllerPath(ICMS_SYS_PATH . 'pages/frontend/');
+        //$frontcontroller->setControllerPath(ICMS_SYS_PATH . 'pages/frontend/');
         $request = Request::instance();
         $response = Response::instance();
         $request->route(new DefaultRouter());
 
         $time = Debug::benchmark(array($frontcontroller, 'run'), array($request, $response), $result);
+        
+        $response->send();
 
         echo "\n\nRuntime: $time seconds\n\n\n\n";
     }
     catch (Exception $e)
     {
-        echo get_class($e) . ":\nMessage: " . $e->getMessage() . "\nAt:" . basename($e->getFile()) . ':' . $e->getLine();
+        echo get_class($e) . ":\nMessage: " . $e->getMessage() . "\nAt: " . basename($e->getFile()) . ':' . $e->getLine();
     }
     
     //var_dump(Loader::getClassMap());
 
-    echo '</pre>';
+    //echo '</pre>';
 
 ?>
