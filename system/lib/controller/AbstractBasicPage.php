@@ -10,9 +10,9 @@
         protected $request;
         protected $response;
         
-        public function  __construct(IRequest $request, IResponse $response)
+        public function __construct(IRequest $request, IResponse $response)
         {
-            $this->design = new Design('TEST');
+            $this->design = new Design();
             $this->db = Registry::get('database');
             $this->session =& Session::instance();
             $this->request = $request;

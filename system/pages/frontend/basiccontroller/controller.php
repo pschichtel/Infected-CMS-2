@@ -7,11 +7,11 @@
         public function __construct(IRequest $request, Response $response)
         {
             parent::__construct($request, $response);
+            $this->design->setTitle('BasicPage');
         }
 
         public function action_index()
         {
-            $this->design->render();
             if (Session::instance()->exists('text'))
             {
                 echo "Session text:\n" . Session::instance()->get('text') . "\n";
@@ -24,6 +24,7 @@
         
         public function action_tpl()
         {
+            Design::addMinorTitle('Templates tests');
             $tpl = new Template('test/index');
             $tpl->addVar('data', array(
                 array(
