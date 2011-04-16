@@ -1,7 +1,7 @@
 <?php
     return array(
         'AbstractController'                => 'lib/Controller/AbstractController.php',
-        'AbstractBasicPage'           => 'lib/Controller/AbstractBasicController.php',
+        'AbstractBasicPage'                 => 'lib/Controller/AbstractBasicPage.php',
         'ControllerException'               => 'lib/Controller/ControllerException.php',
         'Frontcontroller'                   => 'lib/Controller/FrontController.php',
      // 'Database'                          => 'lib/Database/Database.php',
