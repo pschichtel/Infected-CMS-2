@@ -9,10 +9,17 @@
     $http = new Http();
     $http->setDebug(true);
     
-    $target = 'http://server.code-infection.de/page/mcactivate.php';
+    $target = 'http://localhost:6561/command/kick/';
     $http->setTarget($target);
     $http->setMethod(new PostRequestMethod());
-    $http->setRequestBody($http->preparePostData(array('key' => '55e-5a0')));
+    $queryString = $http->generateQueryString(array(
+        'password' => 'changeMe',
+        'params' => array(
+            'quick_wango'
+        )
+    ));
+    echo "QueryString: " . htmlspecialchars($queryString) . "\n";
+    $http->setRequestBody($queryString);
     //$http->addHeader(new HttpHeader('Connection', 'close'));
 
     $http->executeRequest();

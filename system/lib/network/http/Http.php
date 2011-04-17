@@ -976,6 +976,39 @@
         {
             return $this->requestBody;
         }
+        
+        /**
+         *
+         * @param string $name the name of the array
+         * @param array $array the array itself
+         * @param type $indexes the indexes
+         * @return string[] a list of querystring variables 
+         */
+        private function arrayToQueryString($name, array $array, $indexes = '')
+        {
+            $vars = array();
+            foreach ($array as $index => $value)
+            {
+                if (is_int($index))
+                {
+                    $index = '';
+                }
+                else
+                {
+                    $index = urlencode(strval($index));
+                }
+                if (is_array($value))
+                {
+                    $vars = array_merge($vars, $this->arrayToQueryString($name, $value, $indexes . "[$index]" ));
+                }
+                else
+                {
+                    $vars[] = "{$name}{$indexes}[$index]=" . urlencode(strval($value));
+                }
+            }
+
+            return $vars;
+        }
 
         /**
          * Converts an associated array to a URL encoded string of kay-value-pairs
@@ -984,14 +1017,23 @@
          * @param mixed[] $data the array to convert
          * @return string the converted array
          */
-        public function preparePostData(array $data)
+        public function generateQueryString(array $data)
         {
-            $dataStr = '';
+            $vars = array();
             foreach ($data as $index => $value)
             {
-                $dataStr .= '&' . urlencode(trim($index)) . '=' . urlencode(trim($value));
+                $index = strval($index);
+                if (is_array($value))
+                {
+                    $vars = array_merge($vars, $this->arrayToQueryString($index, $value));
+                }
+                else
+                {
+                    $vars[] = urlencode($index) . '=' . urlencode(strval($value));
+                }
             }
-            return substr($dataStr, 1);
+
+            return implode('&', $vars);
         }
 
         /**
