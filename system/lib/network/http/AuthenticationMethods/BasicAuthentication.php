@@ -15,10 +15,10 @@
         /**
          * Returns the authentication header for this header
          *
-         * @param Http $http the current Http object
+         * @param HttpClient $http the current Http object
          * @return string the authentication header
          */
-        public function getAuthHeader(Http $http)
+        public function getAuthHeader(HttpClient $http)
         {
             return 'Authorization: Basic ' . base64_encode($http->getAuthUser() . ':' . $http->getAuthPass());
         }

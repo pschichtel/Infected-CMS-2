@@ -10,10 +10,10 @@
          * Builds the whole request header for this request method
          *
          * @access public
-         * @param Http $http the current Http-object
+         * @param HttpClient $http the current Http-object
          * @return string the header ready to sent
          */
-        public abstract function getHeader(Http $http);
+        public abstract function getHeader(HttpClient $http);
 
         /**
          * @access public
@@ -39,7 +39,7 @@
          * @param Http the current Http-object
          * @return string the Cookie-header
          */
-        protected final function buildCookieHeader(Http $http)
+        protected final function buildCookieHeader(HttpClient $http)
         {
             $headerStr = '';
             foreach ($http->getCookies() as $cookie)

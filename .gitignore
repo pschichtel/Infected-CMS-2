@@ -1,4 +1,4 @@
-.gitignore
-mailtext.txt
-smtptests.php
-run.cmd
+./*.txt
+*test.php
+*.cmd
+*.phpcli

@@ -29,6 +29,8 @@
         public function __destruct()
         {
             unset($this->session);
+            unset(self::$instance);
+            self::$instance = null;
         }
 
         private function __clone()
@@ -43,39 +45,64 @@
             return self::$instance;
         }
         
-        public static function name($name = null)
+        public static function setName($name)
         {
-            if (!$name || self::$instance !== null)
+            if (self::$instance === null)
+            {
+                self::$sessionName = strval($name);
+            }
+        }
+        
+        public static function getName()
+        {
+            if (self::$instance !== null)
             {
                 return session_name();
             }
             else
             {
-                self::$sessionName = strval($name);
+                return self::$sessionName;
             }
         }
-
-        public static function id($id = null)
+        
+        public static function setId($id)
         {
-            if (!$id || self::$instance !== null)
-            {
-                return session_id();
-            }
-            else
+            if (self::$instance === null)
             {
                 self::$sessionID = $id;
             }
         }
 
-        public static function lifetime($lifetime = null)
+        public function getId()
         {
-            if ($lifetime === null || self::$instance !== null)
+            if (self::$instance !== null)
             {
-                return self::$sessionLifetime;
+                return session_id();
             }
             else
             {
+                return self::$sessionID;
+            }
+        }
+        
+        public static function setLifetime($lifetime)
+        {
+            if (self::$instance === null)
+            {
                 self::$sessionLifetime = intval($lifetime);
+            }
+        }
+
+        public static function getLifetime()
+        {
+            if (self::$instance !== null)
+            {
+                $sessCookieParams = session_get_cookie_params();
+                return $sessCookieParams['lifetime'];
+            }
+            else
+            {
+                return self::$sessionLifetime;
             }
         }
 
@@ -92,7 +119,7 @@
             }
         }
         
-        public function get($name)
+        public function get($name, $default = null)
         {
             if ($this->exists($name))
             {
@@ -100,7 +127,7 @@
             }
             else
             {
-                return null;
+                return $default;
             }
         }
         

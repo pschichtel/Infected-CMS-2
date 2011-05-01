@@ -4,7 +4,7 @@
     Loader::addSysDirectoryToMap('lib/Network/Http/RequestMethods');
     Loader::addSysDirectoryToMap('lib/Network/Http/AuthenticationMethods');
 
-    class Http implements Serializable
+    class HttpClient implements Serializable
     {
         const LINE_ENDING       = "\r\n";
 
@@ -29,6 +29,7 @@
         protected $authUser;
         protected $authPass;
 
+        protected $tryReconnectOnSendFailure;
         protected $handleRedirects;
         protected $useCookieRules;
         protected $cookies;
@@ -41,11 +42,12 @@
         protected $responseHeaders;
         protected $responseProtocol;
         protected $responseStatusCode;
+        protected $responseStatusText;
 
         public function serialize()
         {
             $data = array(
-                'connection' => array($this->connectionKeepAlive),
+                'connection' => array($this->connectionKeepAlive, $this->tryReconnectOnSendFailure),
                 'connectionData' => array($this->host, $this->hostIp, $this->port, $this->file, $this->dir, $this->ssl),
                 'auth' => array($this->authUse, $this->authMethod, $this->authUser, $this->authPass),
                 'requestData' => array($this->handleRedirects, $this->useCookieRules, $this->cookies, $this->requestBody, $this->requestHeaders, $this->requestMethod),
@@ -58,6 +60,7 @@
             $data = unserialize($serialized);
 
             $this->connectionKeepAlive = $data['connection'][0];
+            $this->tryReconnectOnSendFailure = $data['connection'][1];
 
             $this->host = $data['connectionData'][0];
             $this->hostIp = $data['connectionData'][1];
@@ -89,6 +92,7 @@
             $this->connection = null;
             $this->connected = false;
             $this->connectionKeepAlive = false;
+            $this->tryReconnectOnSendFailure = false;
 
             $this->debug = false;
             $this->ERRNO = 0;
@@ -208,6 +212,7 @@
             if ($this->connected && is_resource($this->connection) && (!$this->connectionKeepAlive || $force))
             {
                 @fclose($this->connection);
+                $this->connected = false;
             }
         }
 
@@ -221,11 +226,24 @@
          */
         protected function send($data)
         {
+            static $reconnectTried = false;
             $bytesSent = @fwrite($this->connection, $data);
             if ($bytesSent === false)
             {
-                throw new NetworkException('Failed to send the given data!');
+                if ($this->tryReconnectOnSendFailure && !$reconnectTried)
+                {
+                    $reconnectTried = true;
+                    $this->disconnect(true);
+                    $this->connect();
+                    return $this->send($data);
+                }
+                else
+                {
+                    $reconnectTried = false;
+                    throw new NetworkException('Failed to send the given data!');
+                }
             }
+            $reconnectTried = false;
             return $bytesSent;
         }
 
@@ -528,6 +546,27 @@
         public function getConnectionKeepAlive()
         {
             return $this->connectionKeepAlive;
+        }
+        
+        /**
+         * Sets whether to try to reconnect on a send failure
+         *
+         * @access public
+         * @param bool $state the state to set
+         */
+        public function setTryReconnectOnSendFailure($state)
+        {
+            $this->tryReconnectOnSendFailure = ($state ? true : false);
+        }
+        
+        /**
+         * Returns whether to try to reconnect on a send failure
+         *
+         * @access public
+         */
+        public function getTryReconnectOnSendFailure()
+        {
+            return $this->tryReconnectOnSendFailure;
         }
 
         /**
@@ -934,6 +973,17 @@
         }
 
         /**
+         * Returns the status text of the last request
+         *
+         * @access public
+         * @return int the status code
+         */
+        public function getResponseStatusText()
+        {
+            return $this->responseStatusText;
+        }
+
+        /**
          * Returns the response header as a string
          *
          * @access public
@@ -1064,6 +1114,7 @@
          */
         protected function readResponseHeader()
         {
+            $this->rawResponseHeader = '';
             while (($tmp = fgets($this->connection, 256)))
             {
                 $this->rawResponseHeader .= $tmp;
@@ -1132,7 +1183,7 @@
         {
             $this->debug_print_block('Response-Header', $this->rawResponseHeader);
 
-            $responseHeaderLines = explode(Http::LINE_ENDING, trim($this->rawResponseHeader));
+            $responseHeaderLines = explode(HttpClient::LINE_ENDING, trim($this->rawResponseHeader));
 
             $responseHeaders = array();
             $cookieHeaders = array();
@@ -1159,12 +1210,20 @@
             $this->parseCookies($cookieHeaders);
             $this->responseHeaders = $responseHeaders;
 
-            $proto_end = strpos($responseHeaderLines[0], ' ');
-            $code_end = strpos($responseHeaderLines[0], ' ', $proto_end + 1);
+            $proto_end = @strpos($responseHeaderLines[0], ' ');
+            if ($proto_end === false)
+            {
+                throw new NetworkException("Failed to parse the protocol header");
+            }
+            $code_end = @strpos($responseHeaderLines[0], ' ', $proto_end + 1);
+            if ($code_end === false)
+            {
+                throw new NetworkException("Failed to parse the protocol header");
+            }
 
             $this->responseProtocol = substr($responseHeaderLines[0], 0, $proto_end);
             $this->responseStatusCode = intval(substr($responseHeaderLines[0], $proto_end + 1, $code_end - $proto_end));
-            $this->responseStatusText = substr($responseHeaderLines[0], $code_end + 1);
+            $this->responseStatusText = trim(substr($responseHeaderLines[0], $code_end + 1));
 
             $this->debug_print_block('Protocol-Header', "responseProtocoll: {$this->responseProtocol}\nresponseStatusCode: {$this->responseStatusCode}\nresponseStatusText: {$this->responseStatusText}");
         }
@@ -1176,12 +1235,11 @@
          */
         protected function readResponseBody()
         {
-            static $readCodes       = array(200);
             static $redirectCodes   = array(300, 301, 302, 303, 305, 307);
 
             $this->responseBody = '';
             $BUFSIZE = 4096;
-            if (in_array($this->responseStatusCode, $readCodes))
+            if (!in_array($this->responseStatusCode, $redirectCodes))
             {
                 $this->debug_print_important('HTTP::readResponseContent() => readCode: ' . $this->responseStatusCode);
                 if (isset($this->responseHeaders['content-length']))
@@ -1211,11 +1269,11 @@
                             $tmp .= fgets($this->connection, $chunkLength);
                             $tmpLength = strlen($tmp);
                         }
-                        if (substr($tmp, $tmpLength - 2) == Http::LINE_ENDING)
+                        if (substr($tmp, $tmpLength - 2) == HttpClient::LINE_ENDING)
                         {
                             $tmp = substr($tmp, 0, $tmpLength - 2);
                         }
-                        $this->responseBody .= $tmp;/**/
+                        $this->responseBody .= $tmp;
 
                         //$this->responseBody .= stream_get_contents($this->connection, $chunkLength);
                     }
@@ -1234,14 +1292,14 @@
                     $this->responseBody = stream_get_contents($this->connection);
                 }
             }
-            elseif (in_array($this->responseStatusCode, $redirectCodes))
+            else
             {
                 $this->debug_print_important('HTTP::readResponseContent() => redirectCode: ' . $this->responseStatusCode);
                 if ($this->handleRedirects)
                 {
-                    if (isset($this->responseHeaders['Location']))
+                    if (isset($this->responseHeaders['location']))
                     {
-                        $this->setTarget($this->responseHeaders['Location']);
+                        $this->setTarget($this->responseHeaders['location']->value);
                         $this->executeRequest();
                     }
                     else
@@ -1281,7 +1339,7 @@
             $this->debug_print_block('HTTP-Members', "Host: {$this->host}\nHost-IP: {$this->hostIp}\nSSL: " . ($this->ssl ? 'true' : 'false') . "\nPort: {$this->port}\nVerzeichnis: {$this->dir}\nDatei: {$this->file}\nCookies:\n" . print_r($this->cookies, true));
 
 
-            $request = $this->requestMethod->getHeader($this) . Http::LINE_ENDING . Http::LINE_ENDING;
+            $request = $this->requestMethod->getHeader($this) . HttpClient::LINE_ENDING . HttpClient::LINE_ENDING;
 
             $this->debug_print_block('Request-Header', $request);
 

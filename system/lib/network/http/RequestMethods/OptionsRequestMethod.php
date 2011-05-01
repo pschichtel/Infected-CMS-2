@@ -6,14 +6,14 @@
             return 'OPTIONS';
         }
 
-        public function getHeader(Http $http)
+        public function getHeader(HttpClient $http)
         {
             $http->setConnectionKeepAlive(false);
             $headerLines[] = 'OPTIONS ' . $http->getFile() . ' HTTP/1.1';
             $headerLines[] = 'Host: ' . $http->getHost();
             $headerLines[] = 'Connection: close';
 
-            return implode(Http::LINE_ENDING, $headerLines);
+            return implode(HttpClient::LINE_ENDING, $headerLines);
         }
 
         public function content()

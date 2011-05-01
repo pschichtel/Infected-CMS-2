@@ -6,7 +6,7 @@
             return 'POST';
         }
 
-        public function getHeader(Http $http)
+        public function getHeader(HttpClient $http)
         {
             $http->setConnectionKeepAlive(false);
             $requestBody = $http->getRequestBody();
@@ -30,7 +30,7 @@
             $headerLines[] = '';
             $headerLines[] = $requestBody;
 
-            return implode(Http::LINE_ENDING, $headerLines);
+            return implode(HttpClient::LINE_ENDING, $headerLines);
         }
 
         public function content()

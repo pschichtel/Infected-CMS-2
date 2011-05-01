@@ -29,7 +29,10 @@
 
         public function pop()
         {
-            $this->size--;
+            if ($this->size > 0)
+            {
+                $this->size--;
+            }
             return array_pop($this->stack);
         }
 

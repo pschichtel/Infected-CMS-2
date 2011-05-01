@@ -6,7 +6,7 @@
             return 'HEAD';
         }
 
-        public function getHeader(Http $http)
+        public function getHeader(HttpClient $http)
         {
             $http->setConnectionKeepAlive(false);
             $headerLines[] = 'HEAD ' . $http->getFile() . ' HTTP/1.1';
@@ -25,7 +25,7 @@
                 $headerLines[] = $http->getAuthMethod()->getAuthHeader($http);
             }
 
-            return implode(Http::LINE_ENDING, $headerLines);
+            return implode(HttpClient::LINE_ENDING, $headerLines);
         }
     }
 ?>

@@ -6,26 +6,20 @@
     $target = 'http://www.google.de/';
     //$target = 'http://apptrackr.org/';
     //$target = 'http://netbeans.org/';
-    $http = new Http();
+    $method = new GetRequestMethod();
+    $http = new HttpClient();
     $http->setDebug(true);
-    
-    $target = 'http://localhost:6561/command/kick/';
     $http->setTarget($target);
-    $http->setMethod(new PostRequestMethod());
-    $queryString = $http->generateQueryString(array(
-        'password' => 'changeMe',
-        'params' => array(
-            'quick_wango'
-        )
-    ));
-    echo "QueryString: " . htmlspecialchars($queryString) . "\n";
-    $http->setRequestBody($queryString);
+    $http->setMethod($method);
+    //$queryString = $http->generateQueryString(array());
+    //$http->setRequestBody($queryString);
     //$http->addHeader(new HttpHeader('Connection', 'close'));
 
     $http->executeRequest();
 
-    //echo htmlspecialchars($http->getResponseBody());
-    echo '>' . $http->getResponseBody() . '<';
+    $response = $http->getResponseBody();
+    $response = htmlspecialchars($response);
+    echo '>' . $response . "<\n\n\n\n\n";
 
 
 ?></pre>

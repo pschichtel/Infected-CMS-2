@@ -19,8 +19,8 @@
     //Registry::set('database',       Database::factorFromConfig($config));
     //Registry::set('database',       Database::factory('mysql://root@localhost/test?ci-0001_#utf8'));
 
-    Session::name('sessID');
-    Session::lifetime(10);
+    Session::setName('sessID');
+    Session::setLifetime(10);
     Session::instance();
 
     //echo "<pre>";
