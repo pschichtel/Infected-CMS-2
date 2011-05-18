@@ -69,13 +69,13 @@
          */
         private function __construct($logfile)
         {
+            if (!is_writable(dirname($logfile)))
+            {
+                throw new Exception('the logfile is not writable!', 401);
+            }
             $this->sthWritten = false;
             $this->filepath = $logfile;
-            $this->fmode = 'a';
-            if (!file_exists($this->filepath))
-            {
-                $this->fmode = 'w';
-            }
+            $this->fmode = 'ab';
         }
 
         /**
@@ -95,12 +95,8 @@
         private function __clone()
         {}
 
-        public static function factory($logfile)
+        public static function instance($logfile)
         {
-            if (!is_writable(dirname($logfile)))
-            {
-                throw new Exception('the logfile is not writable!', 401);
-            }
             if (!isset(self::$instances[$logfile]))
             {
                 self::$instances[$logfile] = new self($logfile);

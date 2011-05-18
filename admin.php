@@ -6,8 +6,8 @@
     $target = 'http://www.google.de/';
     //$target = 'http://apptrackr.org/';
     //$target = 'http://netbeans.org/';
-    $method = new GetRequestMethod();
     $http = new HttpClient();
+    $method = new GetRequestMethod();
     $http->setDebug(true);
     $http->setTarget($target);
     $http->setMethod($method);
@@ -15,6 +15,9 @@
     //$http->setRequestBody($queryString);
     //$http->addHeader(new HttpHeader('Connection', 'close'));
 
+    $http->executeRequest();
+    
+    $http->setTarget('search');
     $http->executeRequest();
 
     $response = $http->getResponseBody();

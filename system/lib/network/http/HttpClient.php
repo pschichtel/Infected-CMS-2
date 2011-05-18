@@ -112,7 +112,7 @@
             $this->authPass = '';
 
             $this->handleRedirects = true;
-            $this->postData = '';
+            $this->requestBody = '';
             $this->useCookieRules = true;
             $this->cookies = array();
             $this->requestHeaders = array();
@@ -148,7 +148,7 @@
 
         /**
          * Connects to the host IP if not already connected.
-         * On error a NetworkException will be thrown.
+         * On error a HttpException will be thrown.
          *
          * @access protected
          */
@@ -158,12 +158,12 @@
             {
                 if ($this->ssl && !in_array('ssl', stream_get_transports()))
                 {
-                    throw new NetworkException('This request requires a SSL connection, but the SSL stream transport was not found!');
+                    throw new HttpException('This request requires a SSL connection, but the SSL stream transport was not found!');
                 }
                 $this->connection = @fsockopen(($this->ssl ? 'ssl://' : '') . $this->hostIp, $this->port, $this->ERRNO, $this->ERRSTR, $this->TIMEOUT);
                 if ($this->connection === false)
                 {
-                    throw new NetworkException('Failed to connect to the remote host! Error: ' . $this->ERRSTR);
+                    throw new HttpException('Failed to connect to the remote host! Error: ' . $this->ERRSTR);
                 }
                 $this->connected = true;
 
@@ -218,7 +218,7 @@
 
         /**
          * Sends the given data to the remote host.
-         * On error e NetworkException will be thrown.
+         * On error e HttpException will be thrown.
          *
          * @access protected
          * @param string $data the data to send
@@ -240,7 +240,7 @@
                 else
                 {
                     $reconnectTried = false;
-                    throw new NetworkException('Failed to send the given data!');
+                    throw new HttpException('Failed to send the given data!');
                 }
             }
             $reconnectTried = false;
@@ -449,7 +449,7 @@
         {
             if (count($names) !== count($cookies))
             {
-                throw new NetworkException('The the name count must equal the cookie count');
+                throw new HttpException('The the name count must equal the cookie count');
             }
             foreach ($cookies as $cookie)
             {
@@ -652,7 +652,7 @@
             $file = trim($file);
             if (substr($file, 0, 1) != '/')
             {
-                throw new NetworkException('A absolute path is required to set the file!');
+                throw new HttpException('A absolute path is required to set the file!');
             }
             $this->file = $file;
             if ($getDirFromFile)
@@ -1213,12 +1213,12 @@
             $proto_end = @strpos($responseHeaderLines[0], ' ');
             if ($proto_end === false)
             {
-                throw new NetworkException("Failed to parse the protocol header");
+                throw new HttpException("Failed to parse the protocol header");
             }
             $code_end = @strpos($responseHeaderLines[0], ' ', $proto_end + 1);
             if ($code_end === false)
             {
-                throw new NetworkException("Failed to parse the protocol header");
+                throw new HttpException("Failed to parse the protocol header");
             }
 
             $this->responseProtocol = substr($responseHeaderLines[0], 0, $proto_end);
@@ -1304,7 +1304,7 @@
                     }
                     else
                     {
-                        throw new NetworkException('Tried to redirect, but there was no Location-header in the response.');
+                        throw new HttpException('Tried to redirect, but there was no Location-header in the response.');
                     }
                 }
             }
@@ -1328,7 +1328,7 @@
         {
             if (!$this->validateVars())
             {
-                throw new NetworkException('Not all needed informations were found.');
+                throw new HttpException('Not all needed informations were found.');
             }
 
             if ($method !== null)

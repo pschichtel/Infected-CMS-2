@@ -48,6 +48,7 @@
         'Autoloader'                        => 'lib/Util/Autoloader.php',
         'IConfig'                           => 'lib/Util/IConfig.php',
         'Smtp'                              => 'lib/Network/Smtp.php',
+        'HttpException'                     => 'lib/Network/Http/HttpException.php',
         'HttpClient'                        => 'lib/Network/Http/HttpClient.php',
         'HttpHeader'                        => 'lib/Network/Http/HttpHeader.php',
         'HttpCookie'                        => 'lib/Network/Http/HttpCookie.php',
